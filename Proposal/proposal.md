@@ -1,6 +1,7 @@
 # Project proposal
 
-You often hear “It’s too late to get into Bitcoin now.” or “I missed out when Bitcoin was accessible.”, but is that really the case? This website will allow users to compare the price of commodities and other currencies to the price of Bitcoin at a chosen point in time (from Bitcoin’s inception , and their current exchange rate.
+You often hear “It’s too late to get into Bitcoin now.” or “I missed out when Bitcoin was accessible.”, but is that really the case? What would you have if you had **B**ought **B**itcoin **A**nd **N**ot **AN**other **asset**?  
+This website will allow users to compare the price of commodities and other currencies to the price of Bitcoin at a chosen point in time (from Bitcoin’s inception , and their current exchange rate.
 
 The targeted audience is anyone old enough to remember 2008, and interested in cryptocurrencies, so they can compare their past trades’ performance to Bitcoin.
 The APIs the app will use are API for Commodity Data - Nasdaq Data Link Blog for commodities and CryptoCompare API for currency prices. They need to go back as far as possible, preferably before 2012 at least.
