@@ -4,7 +4,7 @@ You often hear “It’s too late to get into Bitcoin now.” or “I missed out
 This website will allow users to compare the price of commodities and other currencies to the price of Bitcoin at a chosen point in time (from Bitcoin’s inception , and their current exchange rate.
 
 The targeted audience is anyone old enough to remember 2008, and interested in cryptocurrencies, so they can compare their past trades’ performance to Bitcoin.
-The APIs the app will use are API for Commodity Data - Nasdaq Data Link Blog for commodities and CryptoCompare API for currency prices. They need to go back as far as possible, preferably before 2012 at least.
+The APIs the app will use are [API for Commodity Data - Nasdaq Data Link Blog](https://blog.data.nasdaq.com/api-for-commodity-data) for commodities and [CryptoCompare API](https://min-api.cryptocompare.com/documentation) for currency prices. They need to go back as far as possible, preferably before 2012 at least.
 
 The rough draft of the database will look like this:  
 ![3rd DB schema](/Proposal/3rd_DB_schema.png)
