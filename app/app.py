@@ -21,18 +21,24 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
-
 @app.route('/')
 def home():
     return render_template('index.html')
 
+########################
+#    AUTHENTICATION    #
+########################
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    '''Required by flask-login'''
+    return User.query.get(user_id)
+
 
 @app.route('/signup', methods=[GET, POST])
 def sign_up():
+    '''Show signup form and add user to DB when submitted'''
     if current_user.is_authenticated:
         flash('already logged in', 'danger')
         return redirect('/')
@@ -99,11 +105,11 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # import pdb
-    # pdb.set_trace()
+    '''Log out user if logged in'''
     if current_user.is_anonymous:
         flash('not logged in', 'danger')
         return redirect('/')
+
     logout_user()
     flash('logged out', 'warning')
     return redirect('/')
