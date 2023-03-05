@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
 from forms import SignupForm, LoginForm, TradeForm
 from api_calls import update_crypto_data
-from secret_keys import flask_secret_key
+from secret_keys import flask_secret_key, Nasdaq_key
 
 GET = 'GET'
 POST = 'POST'
@@ -16,6 +16,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///bbanan-asset'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = flask_secret_key
+app.config['NASDAQ_DATA_LINK_API_KEY'] = Nasdaq_key
 
 
 # def init_app():

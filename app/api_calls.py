@@ -1,4 +1,6 @@
 import requests
+from time import mktime
+
 from secret_keys import flask_secret_key, Nasdaq_key, CCompare_key
 from models import Fiat_curr, Crypto_curr, Commodity, db
 
@@ -139,7 +141,7 @@ fiat_currs_list = {
     ('ZMW', 'Zambian kwacha', 'Zambia', 'K')}
 
 
-def convert(date, from_sym, amount, to_sym):
+def convert(date, from_sym, amount, to_sym) -> dict:
     '''Returns amount converted to to_sym and btc equivalent at date'''
     if 'com' in from_sym and 'com' in to_sym:
         return
@@ -149,6 +151,15 @@ def convert(date, from_sym, amount, to_sym):
         return
 
     resp = requests.get(f'{CC_BASE_URL}/pricehistorical', params={
-        'fsym': from_sym,
-        'tsyms': f'{to_sym},BTC',
-        'ts': date})
+        'fsym': 'BTC',
+        'tsyms': f'{from_sym},{to_sym}',
+        'ts': mktime(date.timetuple())})
+    rates = resp.json()['BTC']
+
+    # | btc |  fsym  |  tsym  |
+    # |  1  | r[f_s] | r[t_s] |
+    # |  ?  |  amnt  |   ?    |
+    btc_equiv = amount / rates[from_sym]
+    tsym_equiv = rates[to_sym] * amount / rates[from_sym]
+
+    return (btc_equiv, tsym_equiv)
