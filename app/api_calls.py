@@ -1,4 +1,5 @@
 import requests
+from ciso8601 import parse_datetime
 from time import mktime
 
 from secret_keys import flask_secret_key, Nasdaq_key, CCompare_key
@@ -141,7 +142,7 @@ fiat_currs_list = {
     ('ZMW', 'Zambian kwacha', 'Zambia', 'K')}
 
 
-def convert(date, from_sym, amount, to_sym) -> dict:
+def convert(date, from_sym, amount, to_sym) -> tuple:
     '''Returns amount converted to to_sym and btc equivalent at date'''
     if 'com' in from_sym and 'com' in to_sym:
         return
@@ -163,3 +164,18 @@ def convert(date, from_sym, amount, to_sym) -> dict:
     tsym_equiv = rates[to_sym] * amount / rates[from_sym]
 
     return (btc_equiv, tsym_equiv)
+    # RETURN RATES TOO
+
+
+comms_list = {
+    ('Dairy', '/CHRIS/CME_DA1/data'),
+    ('Brent Crude oil', 'ODA/POILBRE_USD/data'),
+    ('Henry Hub Natural Gas', 'ODA/PNGASUS_USD'),
+    ('Gold', 'LBMA/GOLD'),
+    ('Silver', 'LBMA/SILVER'),
+    ()
+}
+'https://data.nasdaq.com/api/v3/datasets/ODA/PCOPP_USD/data?collapse=daily&limit=1&start_date=2008-02-28'
+
+time = parse_datetime('2020-02-20')
+iso_time = mktime(time.timetuple())
