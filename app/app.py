@@ -1,12 +1,13 @@
 from flask import Flask, request, render_template, redirect, flash
 from flask_login import LoginManager, login_user, logout_user
 from flask_login import login_required, current_user
-import requests
 from sqlalchemy.exc import IntegrityError
-from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
-from forms import SignupForm, LoginForm
 
-from secret_keys import flask_secret_key, Nasdaq_key, CCompare_key
+from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
+from forms import SignupForm, LoginForm, TradeForm
+from api_calls import update_crypto_data
+from secret_keys import flask_secret_key
+
 GET = 'GET'
 POST = 'POST'
 
@@ -16,14 +17,55 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///bbanan-asset'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = flask_secret_key
 
+
+# def init_app():
+#     connect_db(app)
+#     update_crypto_data()
+
+
+# init_app()
+
 connect_db(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+update_crypto_data()
 
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    form = TradeForm()
+
+    choices = get_choices()
+    form.from_fiats.choices, form.from_cryptos.choices = choices
+    form.to_fiats.choices, form.to_cryptos.choices = choices
+    # ADD COMMODITIES
+    return render_template('index.html', form=form)
+
+
+def get_choices():
+    '''Return list of tuples to be passed to WTForms SelectField choices'''
+    fiat_tuples = db.session.query(
+        Fiat_curr.symbol, Fiat_curr.country).order_by(
+        Fiat_curr.symbol).all()
+    fiat_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in fiat_tuples]
+    fiat_choices.insert(0, ('', 'Select an option...'))
+
+    crypto_tuples = db.session.query(
+        Crypto_curr.symbol, Crypto_curr.name).order_by(
+        Crypto_curr.symbol).all()
+    crypto_choices = [(ch[0], f'{ch[1]} ({ch[0]})') for ch in crypto_tuples]
+    crypto_choices.insert(0, ('', 'Select an option...'))
+
+    # ADD COMMODITIES
+    return (fiat_choices, crypto_choices)
+
+
+@app.route('/convert', methods=[POST])
+def test():
+    import pdb
+    pdb.set_trace()
 
 ########################
 #    AUTHENTICATION    #
