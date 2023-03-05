@@ -98,12 +98,16 @@ class Commodity(db.Model):
     symbol VARCHAR(8) PK,
     name TEXT NOT NULL,
     descr TEXT,
+    query_link TEXT NOT NULL,
+    col TEXT NOT NULL
     ```'''
     __tablename__ = 'commodities'
 
     symbol = db.Column(db.String(8), primary_key=True)
     name = db.Column(db.Text, nullable=False)
     descr = db.Column(db.Text)
+    query_link = db.Column(db.Text, nullable=False)
+    col = db.Column(db.Text, nullable=False)
 
     def __repr__(self) -> str:
         return f'<Commodity {self.symbol}: {self.name}>'

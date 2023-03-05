@@ -7,6 +7,7 @@ from models import Fiat_curr, Crypto_curr, Commodity, db
 
 CC_BASE_URL = 'https://min-api.cryptocompare.com/data'
 # CC_ASSET_INFO = 'https://data-api.cryptocompare.com/asset/v1/data/by/symbol'
+NQ_BASE_URL = 'https://data.nasdaq.com/api/v3/datasets/'
 
 
 def create_fiat_currs():
@@ -19,28 +20,8 @@ def create_fiat_currs():
     db.session.commit()
 
 
-def update_crypto_data():
-    '''Get top 100 cryptos by market cap.
-    If any of those cryptos are not in the db, add them.'''
-
-    resp = requests.get(f'{CC_BASE_URL}/top/mktcapfull', params={
-        'api_key': CCompare_key,
-        'limit': 100,
-        'tsym': 'USD'})
-
-    current_symbols = {  # Convert from list of tuples to set of strings
-        sym[0] for sym in db.session.query(Crypto_curr.symbol).all()}
-
-    for coin in resp.json()['Data']:
-        info = coin['CoinInfo']
-        if info['Name'] not in current_symbols:
-            c = Crypto_curr(symbol=info['Name'], name=info['FullName'])
-            db.session.add(c)
-
-    db.session.commit()
-
-
 fiat_currs_list = {
+    # (Symbol, Name, Country, Icon (next to amount))
     ('ALL', 'Albanian lek', 'Albania', 'Lek'),
     ('AMD', 'Armenian dram', 'Armenia', '֏'),
     ('AOA', 'Angolan kwanza', 'Angola', 'Kz'),
@@ -142,6 +123,74 @@ fiat_currs_list = {
     ('ZMW', 'Zambian kwacha', 'Zambia', 'K')}
 
 
+def update_crypto_data():
+    '''Get top 100 cryptos by market cap.
+    If any of those cryptos are not in the db, add them.'''
+
+    resp = requests.get(f'{CC_BASE_URL}/top/mktcapfull', params={
+        'api_key': CCompare_key,
+        'limit': 100,
+        'tsym': 'USD'})
+
+    current_symbols = {  # Convert from list of tuples to set of strings
+        sym[0] for sym in db.session.query(Crypto_curr.symbol).all()}
+
+    for coin in resp.json()['Data']:
+        info = coin['CoinInfo']
+        if info['Name'] not in current_symbols:
+            c = Crypto_curr(symbol=info['Name'], name=info['FullName'])
+            db.session.add(c)
+
+    db.session.commit()
+
+
+comms_list = {
+    # (Symbol, Name, Query link, Column to get data from in resp)
+    ('ALUM', 'Aluminum', 'ODA/PALUM_USD/data', 'Value'),
+    ('BEEF', 'Beef', 'ODA/PBEEF_USD/data', 'Value'),
+    ('CCOA', 'Cocoa', 'ODA/PCOCO_USD/data', 'Value'),
+    ('CHKN', 'Chicken', 'ODA/PPOULT_USD/data', 'Value'),
+    ('COFF', 'Coffee', 'ODA/PCOFFOTM_USD/data', 'Value'),
+    ('COPR', 'Copper', 'ODA/PCOPP_USD/data', 'Value'),
+    ('CORN', 'Corn', 'TFGRAIN/CORN/data', 'Cash Price'),
+    ('COTN', 'Cotton', 'ODA/PCOTTIND_USD/data', 'Value'),
+    ('DAIR', 'Dairy', 'CHRIS/CME_DA1/data', 'Open'),
+    ('GAS', 'Henry Hub Natural Gas', 'ODA/PNGASUS_USD/data', 'Value'),
+    ('GOLD', 'Gold', 'LBMA/GOLD/data', 'USD (AM)'),
+    ('IRON', 'Iron Ore', 'ODA/PIORECR_USD/data', 'Value'),
+    ('LOGS', 'Hard Logs', 'ODA/PLOGSK_USD/data', 'Value'),
+    ('OIL', 'Brent Crude oil', 'ODA/POILBRE_USD/data', 'Value'),
+    ('PLAT', 'Platinum', 'JOHNMATT/PLAT/data', 'New York 9:30'),
+    ('PORK', 'Pork', 'ODA/PPORK_USD/data', 'Value'),
+    ('RICE', 'Rice', 'ODA/PRICENPQ_USD/data', 'Value'),
+    ('SALM', 'Salmon', 'ODA/PSALM_USD/data', 'Values'),
+    ('SHRP', 'Shrimp', 'ODA/PSHRI_USD/data', 'Values'),
+    ('SILV', 'Silver', 'LBMA/SILVER/data', 'USD'),
+    ('SOY', 'Soybean', 'TFGRAIN/SOYBEANS/data', 'Cash Price'),
+    ('SUGR', 'Sugar', 'ODA/PSUGAUSA_USD/data', 'Value'),
+    ('WHET', 'Wheat', 'ODA/PWHEAMT_USD/data', 'Value'),
+    ('WOOL', 'Wool', 'ODA/PWOOLC_USD/data', 'Values'),
+}
+
+
+def get_comm_data():
+    '''Add all commodities from list to DB. Only run once.'''
+    for comm in comms_list:
+        resp = requests.get(
+            f'{NQ_BASE_URL}{comm[2][:-5]}/metadata.json', params={
+                'api_key': Nasdaq_key})
+        descr = resp.json()['dataset'].get(
+            'name', 'No description available.')
+
+        c = Commodity(symbol=f'com_{comm[0]}', name=comm[1],
+                      descr=descr, query_link=comm[2], col=comm[3])
+        db.session.add(c)
+    db.session.commit()
+
+
+'https://data.nasdaq.com/api/v3/datasets/ODA/PCOPP_USD/data?collapse=daily&limit=1&start_date=2008-02-28'
+
+
 def convert(date, from_sym, amount, to_sym) -> tuple:
     '''Returns amount converted to to_sym and btc equivalent at date'''
     if 'com' in from_sym and 'com' in to_sym:
@@ -166,16 +215,6 @@ def convert(date, from_sym, amount, to_sym) -> tuple:
     return (btc_equiv, tsym_equiv)
     # RETURN RATES TOO
 
-
-comms_list = {
-    ('Dairy', '/CHRIS/CME_DA1/data'),
-    ('Brent Crude oil', 'ODA/POILBRE_USD/data'),
-    ('Henry Hub Natural Gas', 'ODA/PNGASUS_USD'),
-    ('Gold', 'LBMA/GOLD'),
-    ('Silver', 'LBMA/SILVER'),
-    ()
-}
-'https://data.nasdaq.com/api/v3/datasets/ODA/PCOPP_USD/data?collapse=daily&limit=1&start_date=2008-02-28'
 
 time = parse_datetime('2020-02-20')
 iso_time = mktime(time.timetuple())
