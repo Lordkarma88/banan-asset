@@ -163,13 +163,13 @@ comms_list = {
     ('PLAT', 'Platinum', 'JOHNMATT/PLAT/data', 'New York 9:30'),
     ('PORK', 'Pork', 'ODA/PPORK_USD/data', 'Value'),
     ('RICE', 'Rice', 'ODA/PRICENPQ_USD/data', 'Value'),
-    ('SALM', 'Salmon', 'ODA/PSALM_USD/data', 'Values'),
-    ('SHRP', 'Shrimp', 'ODA/PSHRI_USD/data', 'Values'),
+    ('SALM', 'Salmon', 'ODA/PSALM_USD/data', 'Value'),
+    ('SHRP', 'Shrimp', 'ODA/PSHRI_USD/data', 'Value'),
     ('SILV', 'Silver', 'LBMA/SILVER/data', 'USD'),
     ('SOY', 'Soybean', 'TFGRAIN/SOYBEANS/data', 'Cash Price'),
     ('SUGR', 'Sugar', 'ODA/PSUGAUSA_USD/data', 'Value'),
     ('WHET', 'Wheat', 'ODA/PWHEAMT_USD/data', 'Value'),
-    ('WOOL', 'Wool', 'ODA/PWOOLC_USD/data', 'Values'),
+    ('WOOL', 'Wool', 'ODA/PWOOLC_USD/data', 'Value'),
 }
 
 
@@ -188,33 +188,59 @@ def get_comm_data():
     db.session.commit()
 
 
-'https://data.nasdaq.com/api/v3/datasets/ODA/PCOPP_USD/data?collapse=daily&limit=1&start_date=2008-02-28'
-
-
 def convert(date, from_sym, amount, to_sym) -> tuple:
     '''Returns amount converted to to_sym and btc equivalent at date'''
     if 'com' in from_sym and 'com' in to_sym:
-        return
-    elif 'com' in from_sym:
-        return
-    elif 'com' in to_sym:
-        return
+        (btc_price,) = get_crypto_rates([], date)
+        # Dividing btc price by rate to get price in btc and not USD
+        fsym_rate = btc_price / get_comm_rate(from_sym, date)
+        tsym_rate = btc_price / get_comm_rate(to_sym, date)
 
+    elif 'com' in from_sym:
+        tsym_rate, btc_price = get_crypto_rates([to_sym], date)
+        fsym_rate = btc_price / get_comm_rate(from_sym, date)
+
+    elif 'com' in to_sym:
+        fsym_rate, btc_price = get_crypto_rates([from_sym], date)
+        tsym_rate = btc_price / get_comm_rate(to_sym, date)
+
+    else:
+        fsym_rate, tsym_rate, btc_price = get_crypto_rates(
+            [from_sym, to_sym], date)
+
+    # | btc | fsym | tsym |
+    # |  1  | fs_r | ts_r |
+    # |  ?  | amnt |  ?   |
+    btc_equiv = amount / fsym_rate
+    tsym_equiv = btc_equiv * tsym_rate
+
+    return (tsym_equiv, btc_equiv, btc_price)
+
+
+def get_crypto_rates(syms_list, date) -> tuple:
+    '''Sends request to CCompare API and returns rates
+    and btc price at date.\n
+    Works with fiats too.
+    If no symbols in syms_list, returns btc price only.'''
     resp = requests.get(f'{CC_BASE_URL}/pricehistorical', params={
         'fsym': 'BTC',
-        'tsyms': f'{from_sym},{to_sym}',
-        'ts': mktime(date.timetuple())})
+        'tsyms': f'{",".join(syms_list)},USD',
+        'ts': mktime(parse_datetime(date).timetuple())})
     rates = resp.json()['BTC']
 
-    # | btc |  fsym  |  tsym  |
-    # |  1  | r[f_s] | r[t_s] |
-    # |  ?  |  amnt  |   ?    |
-    btc_equiv = amount / rates[from_sym]
-    tsym_equiv = rates[to_sym] * amount / rates[from_sym]
-
-    return (btc_equiv, tsym_equiv)
-    # RETURN RATES TOO
+    return (*(rates[sym] for sym in syms_list), rates['USD'])
 
 
-time = parse_datetime('2020-02-20')
-iso_time = mktime(time.timetuple())
+def get_comm_rate(sym, date) -> float:
+    '''Sends request to Nasdaq API and returns rate at date'''
+    comm = Commodity.query.get(sym)
+    resp = requests.get(f'{NQ_BASE_URL}{comm.query_link}.json', params={
+        'api_key': Nasdaq_key, 'collapse': 'daily', 'limit': 1, 'end_date': date})
+
+    try:
+        data = resp.json()['dataset_data']
+        index_of_rate = data['column_names'].index(comm.col)
+        rate = data['data'][0][index_of_rate]
+        return rate
+    except:
+        return False
