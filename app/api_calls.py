@@ -208,9 +208,13 @@ def convert(date, from_sym, amount, to_sym) -> tuple:
         fsym_rate, tsym_rate, btc_price = get_crypto_rates(
             [from_sym, to_sym], date)
 
-    # | btc | fsym | tsym |
-    # |  1  | fs_r | ts_r |
-    # |  ?  | amnt |  ?   |
+    # If error getting commodity rate, returns -1 so they would be negative
+    if fsym_rate < 0 or tsym_rate < 0:
+        return False
+
+    '''| btc | fsym | tsym |
+       |  1  | fs_r | ts_r |
+       |  ?  | amnt |  ?   |'''
     btc_equiv = amount / fsym_rate
     tsym_equiv = btc_equiv * tsym_rate
 
@@ -221,8 +225,9 @@ def get_crypto_rates(syms_list, date) -> tuple:
     '''Sends request to CCompare API and returns rates
     and btc price at date.\n
     Works with fiats too.
-    If no symbols in syms_list, returns btc price only.'''
+    If syms_list empty, returns btc price only.'''
     resp = requests.get(f'{CC_BASE_URL}/pricehistorical', params={
+        'api_key': CCompare_key,
         'fsym': 'BTC',
         'tsyms': f'{",".join(syms_list)},USD',
         'ts': mktime(parse_datetime(date).timetuple())})
@@ -243,4 +248,4 @@ def get_comm_rate(sym, date) -> float:
         rate = data['data'][0][index_of_rate]
         return rate
     except:
-        return False
+        return -1

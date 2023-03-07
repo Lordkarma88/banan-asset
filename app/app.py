@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, url_for
 from flask_login import LoginManager, login_user, logout_user
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -38,8 +38,8 @@ def home():
     form = TradeForm()
 
     choices = get_choices()
-    form.from_fiats.choices, form.from_cryptos.choices = choices
-    form.to_fiats.choices, form.to_cryptos.choices = choices
+    form.from_fiats.choices, form.from_cryptos.choices, form.from_comms.choices = choices
+    form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
     # ADD COMMODITIES
     return render_template('index.html', form=form)
 
@@ -50,16 +50,20 @@ def get_choices():
         Fiat_curr.symbol, Fiat_curr.country).order_by(
         Fiat_curr.symbol).all()
     fiat_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in fiat_tuples]
-    fiat_choices.insert(0, ('', 'Select an option...'))
+    fiat_choices.insert(0, ('', 'Select a fiat currency...'))
 
     crypto_tuples = db.session.query(
         Crypto_curr.symbol, Crypto_curr.name).order_by(
         Crypto_curr.symbol).all()
     crypto_choices = [(ch[0], f'{ch[1]} ({ch[0]})') for ch in crypto_tuples]
-    crypto_choices.insert(0, ('', 'Select an option...'))
+    crypto_choices.insert(0, ('', 'Select a cryptocurrency...'))
 
-    # ADD COMMODITIES
-    return (fiat_choices, crypto_choices)
+    comm_tuples = db.session.query(
+        Commodity.symbol, Commodity.name).order_by(
+        Commodity.name).all()
+    comm_choices = [tuple(ch) for ch in comm_tuples]
+    comm_choices.insert(0, ('', 'Select a commodity...'))
+    return (fiat_choices, crypto_choices, comm_choices)
 
 
 @app.route('/convert', methods=[POST])
@@ -83,7 +87,7 @@ def sign_up():
     '''Show signup form and add user to DB when submitted'''
     if current_user.is_authenticated:
         flash('already logged in', 'danger')
-        return redirect('/')
+        return redirect(url_for('home'))
 
     form = SignupForm()
 
@@ -93,7 +97,7 @@ def sign_up():
         if u:
             login_user(u)
             flash('signed up', 'success')
-            return redirect('/')
+            return redirect(url_for('home'))
 
     return render_template('/auth/signup.html', form=form)
 
@@ -127,7 +131,7 @@ def login():
     '''Login user or show login form'''
     if current_user.is_authenticated:
         flash('already logged in', 'danger')
-        return redirect('/')
+        return redirect(url_for('home'))
 
     form = LoginForm()
 
@@ -139,7 +143,7 @@ def login():
         if u:
             login_user(u)
             flash('logged in', 'success')
-            return redirect('/')
+            return redirect(url_for('home'))
 
         form.username.errors = ['Invalid username or password.']
     return render_template('auth/login.html', form=form)
@@ -150,8 +154,8 @@ def logout():
     '''Log out user if logged in'''
     if current_user.is_anonymous:
         flash('not logged in', 'danger')
-        return redirect('/')
+        return redirect(url_for('home'))
 
     logout_user()
     flash('logged out', 'warning')
-    return redirect('/')
+    return redirect(url_for('home'))
