@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, DateField, FloatField
+from wtforms import StringField, PasswordField, SelectField, DateField, IntegerField
 from wtforms.validators import InputRequired, Length
 
 
@@ -24,11 +24,11 @@ class LoginForm(FlaskForm):
 
 
 class TradeForm(FlaskForm):
-    from_fiats = SelectField('Fiat currencies')
-    from_cryptos = SelectField('Crypto currencies')
-    from_comms = SelectField('Commodities')
-    to_fiats = SelectField('Fiat currencies')
-    to_cryptos = SelectField('Crypto currencies')
-    to_comms = SelectField('Commodities')
-    amount = FloatField('Amount', validators=[InputRequired()])
+    from_fiats = SelectField('Origin')
+    from_cryptos = SelectField('Origin')
+    from_comms = SelectField('Origin')
+    to_fiats = SelectField('Destination')
+    to_cryptos = SelectField('Destination')
+    to_comms = SelectField('Destination')
+    amount = IntegerField('Amount', validators=[InputRequired()])
     date = DateField('Date', validators=[InputRequired()])

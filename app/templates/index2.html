@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Buy Bitcoin And Not ANother Asset!{% endblock %}
+
+{% block content %}
+  <h1>Whale cum</h1>
+  <a href="/signup">Sign up</a>
+  <a href="/login">Log in</a>
+  <a href="/logout">Log out</a>
+  <hr>
+
+  <form method="POST" action="/test">
+    <div class="row">
+      <div class="col-6">
+        <h4>Currency from:</h4>
+
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-fiat">Fiat currencies</button>
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-crypto">Crypto currencies</button>
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-comm">Commodities</button>
+
+        <div class="collapse" id="collapse-fr-fiat">
+          {{ form.from_fiats.label }}
+          {{ form.from_fiats(class_='form-control') }}
+        </div>
+        <div class="collapse" id="collapse-fr-crypto">
+          {{ form.from_cryptos.label }}
+          {{ form.from_cryptos(class_='form-control') }}
+        </div>
+        <div class="collapse" id="collapse-fr-comm">
+          {{ form.from_comms.label }}
+          {{ form.from_comms(class_='form-control') }}
+        </div>
+      </div>
+
+      <div class="col-6">
+        <h4>Currency to:</h4>
+
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-fiat">Fiat currencies</button>
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-crypto">Crypto currencies</button>
+        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-comm">Commodities</button>
+
+        <div class="collapse" id="collapse-to-fiat">
+          {{ form.to_fiats.label }}
+          {{ form.to_fiats(class_='form-control') }}
+        </div>
+        <div class="collapse" id="collapse-to-crypto">
+          {{ form.to_cryptos.label }}
+          {{ form.to_cryptos(class_='form-control') }}
+        </div>
+        <div class="collapse" id="collapse-to-comm">
+          {{ form.to_comms.label }}
+          {{ form.to_comms(class_='form-control') }}
+        </div>
+      </div>
+    </div>
+      
+    <p>
+      {{ form.amount.label }}
+      {{ form.amount(class_='form-control') }}
+
+      {% for error in form.amount.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.date.label }}
+      {{ form.date(class_='form-control') }}
+
+      {% for error in form.date.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </p>
+  
+    <button class="btn btn-primary" type="submit">Submit</button>
+  
+  </form>
+{% endblock %}

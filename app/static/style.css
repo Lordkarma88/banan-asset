@@ -1,0 +1,13 @@
+body {
+  font-family: 'Rubik';
+}
+
+#header-btc {
+  text-decoration: underline;
+  text-decoration-color: #d70;
+}
+
+#header-asset {
+  text-decoration: underline;
+  text-decoration-color: #a00;
+}

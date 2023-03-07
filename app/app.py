@@ -40,7 +40,7 @@ def home():
     choices = get_choices()
     form.from_fiats.choices, form.from_cryptos.choices, form.from_comms.choices = choices
     form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
-    # ADD COMMODITIES
+
     return render_template('index.html', form=form)
 
 
@@ -50,19 +50,19 @@ def get_choices():
         Fiat_curr.symbol, Fiat_curr.country).order_by(
         Fiat_curr.symbol).all()
     fiat_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in fiat_tuples]
-    fiat_choices.insert(0, ('', 'Select a fiat currency...'))
+    # fiat_choices.insert(0, ('', 'Select a fiat currency...'))
 
     crypto_tuples = db.session.query(
         Crypto_curr.symbol, Crypto_curr.name).order_by(
         Crypto_curr.symbol).all()
-    crypto_choices = [(ch[0], f'{ch[1]} ({ch[0]})') for ch in crypto_tuples]
-    crypto_choices.insert(0, ('', 'Select a cryptocurrency...'))
+    crypto_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in crypto_tuples]
+    # crypto_choices.insert(0, ('', 'Select a cryptocurrency...'))
 
     comm_tuples = db.session.query(
         Commodity.symbol, Commodity.name).order_by(
         Commodity.name).all()
     comm_choices = [tuple(ch) for ch in comm_tuples]
-    comm_choices.insert(0, ('', 'Select a commodity...'))
+    # comm_choices.insert(0, ('', 'Select a commodity...'))
     return (fiat_choices, crypto_choices, comm_choices)
 
 

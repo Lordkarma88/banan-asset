@@ -1,77 +1,112 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/cyborg/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <title>Bbanan-asset</title>
+</head>
 
-{% block title %}Buy Bitcoin And Not ANother Asset!{% endblock %}
-
-{% block content %}
-  <h1>Whale cum</h1>
-  <a href="/signup">Sign up</a>
-  <a href="/login">Log in</a>
-  <a href="/logout">Log out</a>
-  <hr>
-
-  <form method="POST" action="/test">
-    <div class="row">
-      <div class="col">
-        <h4>Currency from:</h4>
-
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-fiat">Fiat currencies</button>
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-crypto">Crypto currencies</button>
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-fr-comm">Commodities</button>
-
-        <div class="collapse" id="collapse-fr-fiat">
-          {{ form.from_fiats.label }}
-          {{ form.from_fiats(class_='form-control') }}
+<body>
+  <header>
+    <div class="container">
+      <div class="row pt-4">
+        <div class="col-8 col-md-6 ms-md-5 text-end" id="title">
+          <h3>What if you'd</h3>
+          <h3 id="header-btc"><b>b</b>ought <b>B</b>itcoin</h3>
+          <h3><b>a</b>nd <b>n</b>ot</h3>
+          <h3 id="header-asset"><b>an</b>other <b>asset</b>?</h3>
         </div>
-        <div class="collapse" id="collapse-fr-crypto">
-          {{ form.from_cryptos.label }}
-          {{ form.from_cryptos(class_='form-control') }}
-        </div>
-        <div class="collapse" id="collapse-fr-comm">
-          {{ form.from_comms.label }}
-          {{ form.from_comms(class_='form-control') }}
-        </div>
-      </div>
-
-      <div class="col">
-        <h4>Currency to:</h4>
-
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-fiat">Fiat currencies</button>
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-crypto">Crypto currencies</button>
-        <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-to-comm">Commodities</button>
-
-        <div class="collapse" id="collapse-to-fiat">
-          {{ form.to_fiats.label }}
-          {{ form.to_fiats(class_='form-control') }}
-        </div>
-        <div class="collapse" id="collapse-to-crypto">
-          {{ form.to_cryptos.label }}
-          {{ form.to_cryptos(class_='form-control') }}
-        </div>
-        <div class="collapse" id="collapse-to-comm">
-          {{ form.to_comms.label }}
-          {{ form.to_comms(class_='form-control') }}
+        <div class="col-3 ms-md-3 d-flex align-items-center">
+          <h5>Let's find out. Welcome to bbanan-asset!</h5>
         </div>
       </div>
     </div>
+  </header>
+
+  <form class="bg-warning text-center px-3 py-4">
+    <legend>Select the origin and destination of a trade</legend>
+    <div class="row gx-2">
+      <div class="col">
+        <fieldset class="d-grid d-md-block gap-2 mb-2">
+          <!-- <span class="lead text-white">From: </span> -->
+
+          <input type="radio" id="f-fiat-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off" checked>
+          <label for="f-fiat-radio" class="btn btn-warning">Fiats</label>
+
+          <input type="radio" id="f-crypto-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
+          <label for="f-crypto-radio" class="btn btn-warning">Cryptos</label>
+
+          <input type="radio" id="f-comm-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
+          <label for="f-comm-radio" class="btn btn-warning">Commodities</label>
+        </fieldset>
+        
+        <fieldset> <!-- These get toggled by js when radio buttons ^^^ are clicked -->
+          <div class="fsym-collapse collapse show form-floating" id="f-fiat-collapse">
+            {{ form.from_fiats(class_='form-select') }}
+            {{ form.from_fiats.label(class_='text-black') }}
+          </div>
+          <div class="fsym-collapse collapse form-floating" id="f-crypto-collapse">
+            {{ form.from_cryptos(class_='form-select') }}
+            {{ form.from_cryptos.label(class_='text-black') }}
+          </div>
+          <div class="fsym-collapse collapse form-floating" id="f-comm-collapse">
+            {{ form.from_comms(class_='form-select') }}
+            {{ form.from_comms.label(class_='text-black') }}
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="col">
+        <fieldset class="d-grid d-md-block gap-2 mb-2">
+          <!-- <span class="lead text-white">To: </span> -->
+
+          <input type="radio" id="t-fiat-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
+          <label for="t-fiat-radio" class="btn btn-warning">Fiats</label>
+
+          <input type="radio" id="t-crypto-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off" checked>
+          <label for="t-crypto-radio" class="btn btn-warning">Cryptos</label>
+
+          <input type="radio" id="t-comm-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
+          <label for="t-comm-radio" class="btn btn-warning">Commodities</label>
+        </fieldset>
+
+        <fieldset class="my-2">
+          <div class="tsym-collapse collapse form-floating" id="t-fiat-collapse">
+            {{ form.to_fiats(class_='form-select') }}
+            {{ form.to_fiats.label(class_='text-black') }}
+          </div>
+          <div class="tsym-collapse collapse show form-floating" id="t-crypto-collapse-">
+            {{ form.to_cryptos(class_='form-select') }}
+            {{ form.to_cryptos.label(class_='text-black') }}
+          </div>
+          <div class="tsym-collapse collapse form-floating" id="t-comm-collapse">
+            {{ form.to_comms(class_='form-select') }}
+            {{ form.to_comms.label(class_='text-black') }}
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row gx-0 gy-2">
+      <div class="col-md-5 form-floating">
+        {{ form.amount(class_='form-control', placeholder_='42', min_='0', step_='.00000001') }}
+        {{ form.amount.label(class_='text-black ms-2') }}
+      </div>
+      <div class="col-md-5 px-md-2 form-floating">
+        {{ form.date(class_='form-control') }}
+        {{ form.date.label(class_='text-black') }}
+      </div>
       
-    <p>
-      {{ form.amount.label }}
-      {{ form.amount(class_='form-control') }}
-
-      {% for error in form.amount.errors %}
-      <span class="text-danger">{{ error }}</span>
-      {% endfor %}
-    </p>
-    <p>
-      {{ form.date.label }}
-      {{ form.date(class_='form-control') }}
-
-      {% for error in form.date.errors %}
-      <span class="text-danger">{{ error }}</span>
-      {% endfor %}
-    </p>
-  
-    <button class="btn btn-primary" type="submit">Submit</button>
-  
+      <button class="col-md-2 btn btn-warning border-white" type="submit">Submit</button>
+    </div>
   </form>
-{% endblock %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
