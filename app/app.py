@@ -2,10 +2,11 @@ from flask import Flask, request, render_template, redirect, flash, url_for
 from flask_login import LoginManager, login_user, logout_user
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
+from datetime import date
 
 from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
 from forms import SignupForm, LoginForm, TradeForm
-from api_calls import update_crypto_data
+from api_calls import update_crypto_data, get_crypto_rates
 from secret_keys import flask_secret_key
 
 GET = 'GET'
@@ -41,7 +42,9 @@ def home():
     form.from_fiats.choices, form.from_cryptos.choices, form.from_comms.choices = choices
     form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
 
-    return render_template('index.html', form=form)
+    (current_price,) = get_crypto_rates([], date.today().strftime('%Y-%m-%d'))
+
+    return render_template('index.html', form=form, current_price=current_price)
 
 
 def get_choices():

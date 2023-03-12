@@ -11,102 +11,130 @@
   <title>Bbanan-asset</title>
 </head>
 
-<body>
-  <header>
-    <div class="container">
-      <div class="row pt-4">
-        <div class="col-8 col-md-6 ms-md-5 text-end" id="title">
-          <h3>What if you'd</h3>
-          <h3 id="header-btc"><b>b</b>ought <b>B</b>itcoin</h3>
-          <h3><b>a</b>nd <b>n</b>ot</h3>
-          <h3 id="header-asset"><b>an</b>other <b>asset</b>?</h3>
+<body class="overflow-hiddene">
+  <div id="current-price">Current price: ₿{{ current_price }}</div>
+  <div class="full-screen bg-warning">
+    <header class="bg-black d-flex align-items-center py-md-3">
+      <div class="container">
+        <div class="row pt-4">
+          <div class="col-8 col-md-6 ms-md-5 text-end" id="title">
+            <h3>What if you'd</h3>
+            <h3 id="header-btc"><b>b</b>ought <b>B</b>itcoin</h3>
+            <h3><b>a</b>nd <b>n</b>ot</h3>
+            <h3 id="header-asset"><b>an</b>other <b>asset</b>?</h3>
+          </div>
+          <div class="col-3 ms-md-3 d-flex align-items-center">
+            <h5>Let's find out. Welcome to bbanan-asset!</h5>
+          </div>
         </div>
-        <div class="col-3 ms-md-3 d-flex align-items-center">
-          <h5>Let's find out. Welcome to bbanan-asset!</h5>
+      </div>
+    </header>
+
+
+    <div id="trade-form" class="d-flex align-items-center py-md-4">
+      <form class="container-lg needs-validation text-center px-3 py-4" novalidate>
+        <legend>Select the origin and destination of a trade</legend>
+        <div class="row gx-2">
+          <div class="col">
+            <fieldset class="d-grid d-md-block gap-2 mb-2">
+              <!-- <span class="lead text-white">From: </span> -->
+
+              <input type="radio" id="f-fiat-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off" checked>
+              <label for="f-fiat-radio" class="btn btn-warning">Fiats</label>
+
+              <input type="radio" id="f-crypto-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
+              <label for="f-crypto-radio" class="btn btn-warning">Cryptos</label>
+
+              <input type="radio" id="f-comm-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
+              <label for="f-comm-radio" class="btn btn-warning">Commodities</label>
+            </fieldset>
+            
+            <fieldset> <!-- These get toggled by js when radio buttons ^^^ are clicked -->
+              <div class="fsym-collapse collapse show form-floating" id="f-fiat-collapse">
+                {{ form.from_fiats(class_='form-select') }}
+                {{ form.from_fiats.label(class_='text-black') }}
+              </div>
+              <div class="fsym-collapse collapse form-floating" id="f-crypto-collapse">
+                {{ form.from_cryptos(class_='form-select') }}
+                {{ form.from_cryptos.label(class_='text-black') }}
+              </div>
+              <div class="fsym-collapse collapse form-floating" id="f-comm-collapse">
+                {{ form.from_comms(class_='form-select') }}
+                {{ form.from_comms.label(class_='text-black') }}
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="col">
+            <fieldset class="d-grid d-md-block gap-2 mb-2">
+              <!-- <span class="lead text-white">To: </span> -->
+
+              <input type="radio" id="t-fiat-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
+              <label for="t-fiat-radio" class="btn btn-warning">Fiats</label>
+
+              <input type="radio" id="t-crypto-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off" checked>
+              <label for="t-crypto-radio" class="btn btn-warning">Cryptos</label>
+
+              <input type="radio" id="t-comm-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
+              <label for="t-comm-radio" class="btn btn-warning">Commodities</label>
+            </fieldset>
+
+            <fieldset class="my-2">
+              <div class="tsym-collapse collapse form-floating" id="t-fiat-collapse">
+                {{ form.to_fiats(class_='form-select') }}
+                {{ form.to_fiats.label(class_='text-black') }}
+              </div>
+              <div class="tsym-collapse collapse show form-floating" id="t-crypto-collapse-">
+                {{ form.to_cryptos(class_='form-select') }}
+                {{ form.to_cryptos.label(class_='text-black') }}
+              </div>
+              <div class="tsym-collapse collapse form-floating" id="t-comm-collapse">
+                {{ form.to_comms(class_='form-select') }}
+                {{ form.to_comms.label(class_='text-black') }}
+              </div>
+            </fieldset>
+          </div>
         </div>
-      </div>
-    </div>
-  </header>
 
-  <form class="bg-warning text-center px-3 py-4">
-    <legend>Select the origin and destination of a trade</legend>
-    <div class="row gx-2">
-      <div class="col">
-        <fieldset class="d-grid d-md-block gap-2 mb-2">
-          <!-- <span class="lead text-white">From: </span> -->
-
-          <input type="radio" id="f-fiat-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off" checked>
-          <label for="f-fiat-radio" class="btn btn-warning">Fiats</label>
-
-          <input type="radio" id="f-crypto-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
-          <label for="f-crypto-radio" class="btn btn-warning">Cryptos</label>
-
-          <input type="radio" id="f-comm-radio" name="fsym-radio" class="btn-check fsym-radio" autocomplete="off">
-          <label for="f-comm-radio" class="btn btn-warning">Commodities</label>
-        </fieldset>
-        
-        <fieldset> <!-- These get toggled by js when radio buttons ^^^ are clicked -->
-          <div class="fsym-collapse collapse show form-floating" id="f-fiat-collapse">
-            {{ form.from_fiats(class_='form-select') }}
-            {{ form.from_fiats.label(class_='text-black') }}
+        <div class="row gx-0 gy-2">
+          <div class="col-md-5 form-floating">
+            {{ form.amount(class_='form-control', placeholder_='42', min_='0.00000001', step_='.00000001') }}
+            {{ form.amount.label(class_='text-black ms-2') }}
           </div>
-          <div class="fsym-collapse collapse form-floating" id="f-crypto-collapse">
-            {{ form.from_cryptos(class_='form-select') }}
-            {{ form.from_cryptos.label(class_='text-black') }}
+          <div class="col-md-5 px-md-2 form-floating">
+            {{ form.date(class_='form-control') }}
+            {{ form.date.label(class_='text-black') }}
           </div>
-          <div class="fsym-collapse collapse form-floating" id="f-comm-collapse">
-            {{ form.from_comms(class_='form-select') }}
-            {{ form.from_comms.label(class_='text-black') }}
-          </div>
-        </fieldset>
-      </div>
-
-      <div class="col">
-        <fieldset class="d-grid d-md-block gap-2 mb-2">
-          <!-- <span class="lead text-white">To: </span> -->
-
-          <input type="radio" id="t-fiat-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
-          <label for="t-fiat-radio" class="btn btn-warning">Fiats</label>
-
-          <input type="radio" id="t-crypto-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off" checked>
-          <label for="t-crypto-radio" class="btn btn-warning">Cryptos</label>
-
-          <input type="radio" id="t-comm-radio" name="tsym-radio" class="btn-check tsym-radio" autocomplete="off">
-          <label for="t-comm-radio" class="btn btn-warning">Commodities</label>
-        </fieldset>
-
-        <fieldset class="my-2">
-          <div class="tsym-collapse collapse form-floating" id="t-fiat-collapse">
-            {{ form.to_fiats(class_='form-select') }}
-            {{ form.to_fiats.label(class_='text-black') }}
-          </div>
-          <div class="tsym-collapse collapse show form-floating" id="t-crypto-collapse-">
-            {{ form.to_cryptos(class_='form-select') }}
-            {{ form.to_cryptos.label(class_='text-black') }}
-          </div>
-          <div class="tsym-collapse collapse form-floating" id="t-comm-collapse">
-            {{ form.to_comms(class_='form-select') }}
-            {{ form.to_comms.label(class_='text-black') }}
-          </div>
-        </fieldset>
-      </div>
+          
+          <button class="col-md-2 btn btn-warning border-white" type="submit">Submit</button>
+        </div>
+      </form>
     </div>
 
-    <div class="row gx-0 gy-2">
-      <div class="col-md-5 form-floating">
-        {{ form.amount(class_='form-control', placeholder_='42', min_='0', step_='.00000001') }}
-        {{ form.amount.label(class_='text-black ms-2') }}
-      </div>
-      <div class="col-md-5 px-md-2 form-floating">
-        {{ form.date(class_='form-control') }}
-        {{ form.date.label(class_='text-black') }}
-      </div>
-      
-      <button class="col-md-2 btn btn-warning border-white" type="submit">Submit</button>
-    </div>
-  </form>
+  </div>
 
+  <div id="result">
+    <div class="container p-5">
+      <h3>If you had bought</h3>
+      <h3 class="text-center">bitcoin instead of</h3>
+      <h3 class="text-end">
+        <span class="no-trade" data-bs-toggle="tooltip" data-bs-placement="left" title="You haven't entered a trade!">???</span>
+        <span id="from-sym"></span>
+        , you'd have...
+      </h3>
+
+      <div class="row text-center mt-5 d-non">
+        <h2 class="col-6">$<span id="usd-result">15.2153</span></h2>
+        <h2 class="col-6">₿<span id="btc-result">1.2153</span></h2>
+        <h4 class="mt-4">Back then, 1 bitcoin was only $<span id="btc-price">100</span>.</h4>
+        <p>Did you know you don't have to buy a full bitcoin?</p>
+        <p>You can get started with $20, $5 or even $1!</p>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/jquery"></script>
+<script src="/static/script.js"></script>
 </body>
 </html>
