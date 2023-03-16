@@ -12,7 +12,7 @@
 </head>
 
 <body class="overflow-hiddene">
-  <div id="current-price">Current price: ₿{{ current_price }}</div>
+  <div class="badge rounded-pill bg-warning mt-2 me-2" id="current-price">Current price: ${{ current_price }}</div>
   <div class="full-screen bg-warning">
     <header class="bg-black d-flex align-items-center py-md-3">
       <div class="container">
@@ -50,15 +50,15 @@
             </fieldset>
             
             <fieldset> <!-- These get toggled by js when radio buttons ^^^ are clicked -->
-              <div class="fsym-collapse collapse show form-floating" id="f-fiat-collapse">
+              <div class="fsym-collapse collapse show form-floating" id="f-fiats-collapse">
                 {{ form.from_fiats(class_='form-select') }}
                 {{ form.from_fiats.label(class_='text-black') }}
               </div>
-              <div class="fsym-collapse collapse form-floating" id="f-crypto-collapse">
+              <div class="fsym-collapse collapse form-floating" id="f-cryptos-collapse">
                 {{ form.from_cryptos(class_='form-select') }}
                 {{ form.from_cryptos.label(class_='text-black') }}
               </div>
-              <div class="fsym-collapse collapse form-floating" id="f-comm-collapse">
+              <div class="fsym-collapse collapse form-floating" id="f-comms-collapse">
                 {{ form.from_comms(class_='form-select') }}
                 {{ form.from_comms.label(class_='text-black') }}
               </div>
@@ -80,15 +80,15 @@
             </fieldset>
 
             <fieldset class="my-2">
-              <div class="tsym-collapse collapse form-floating" id="t-fiat-collapse">
+              <div class="tsym-collapse collapse form-floating" id="t-fiats-collapse">
                 {{ form.to_fiats(class_='form-select') }}
                 {{ form.to_fiats.label(class_='text-black') }}
               </div>
-              <div class="tsym-collapse collapse show form-floating" id="t-crypto-collapse-">
+              <div class="tsym-collapse collapse show form-floating" id="t-cryptos-collapse">
                 {{ form.to_cryptos(class_='form-select') }}
                 {{ form.to_cryptos.label(class_='text-black') }}
               </div>
-              <div class="tsym-collapse collapse form-floating" id="t-comm-collapse">
+              <div class="tsym-collapse collapse form-floating" id="t-comms-collapse">
                 {{ form.to_comms(class_='form-select') }}
                 {{ form.to_comms.label(class_='text-black') }}
               </div>

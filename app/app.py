@@ -44,7 +44,9 @@ def home():
 
     (current_price,) = get_crypto_rates([], date.today().strftime('%Y-%m-%d'))
 
-    return render_template('index.html', form=form, current_price=current_price)
+    return render_template('index.html',
+                           form=form,
+                           current_price=format_price(current_price))
 
 
 def get_choices():
@@ -67,6 +69,11 @@ def get_choices():
     comm_choices = [tuple(ch) for ch in comm_tuples]
     # comm_choices.insert(0, ('', 'Select a commodity...'))
     return (fiat_choices, crypto_choices, comm_choices)
+
+
+def format_price(price, decimals=2):
+    '''Returns formatted price with commas and selected decimals (default 2)'''
+    return f'{float(price):,.{decimals}f}'
 
 
 @app.route('/convert', methods=[POST])

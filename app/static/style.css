@@ -2,6 +2,12 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
+#current-price {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+}
+
 .full-screen {
   position: absolute;
   min-height: 100%;
