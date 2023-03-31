@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, flash, url_for
+from flask import Flask, request, render_template, redirect
+from flask import flash, url_for, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -6,11 +7,12 @@ from datetime import date
 
 from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
 from forms import SignupForm, LoginForm, TradeForm
-from api_calls import update_crypto_data, get_crypto_rates
+from helpers import update_crypto_data, get_crypto_rates, get_prices, format_price
 from secret_keys import flask_secret_key
 
 GET = 'GET'
 POST = 'POST'
+BASE_URL = 'http://127.0.0.1:5000'
 
 app = Flask(__name__)
 
@@ -42,11 +44,13 @@ def home():
     form.from_fiats.choices, form.from_cryptos.choices, form.from_comms.choices = choices
     form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
 
-    (current_price,) = get_crypto_rates([], date.today().strftime('%Y-%m-%d'))
+    today = date.today().strftime('%Y-%m-%d')
+    (current_price,) = get_crypto_rates([], today)
 
     return render_template('index.html',
                            form=form,
-                           current_price=format_price(current_price))
+                           current_price=format_price(current_price),
+                           today=today)
 
 
 def get_choices():
@@ -71,15 +75,27 @@ def get_choices():
     return (fiat_choices, crypto_choices, comm_choices)
 
 
-def format_price(price, decimals=2):
-    '''Returns formatted price with commas and selected decimals (default 2)'''
-    return f'{float(price):,.{decimals}f}'
-
-
 @app.route('/convert', methods=[POST])
-def test():
-    import pdb
-    pdb.set_trace()
+def convert():
+    '''Returns converted values from APIs. Adds trade to user if logged in.'''
+    # Prevent outside requests from spamming the server
+    if request.environ.get('HTTP_ORIGIN') != BASE_URL:
+        return abort(403)
+
+    from_sym = request.json['from_sym']
+    to_sym = request.json['to_sym']
+    amount = request.json['amount']
+    date = request.json['date']
+
+    tsym_equiv, btc_equiv, btc_price = get_prices(
+        from_sym, to_sym, float(amount), date)
+
+    if not tsym_equiv:
+        return jsonify({'error': btc_equiv})
+
+    return jsonify({'tsym_equiv': tsym_equiv,
+                    'btc_equiv': btc_equiv,
+                    'btc_price': btc_price})
 
 ########################
 #    AUTHENTICATION    #

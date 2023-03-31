@@ -8,6 +8,16 @@ body {
   right: 0;
 }
 
+#header-btc {
+  text-decoration: underline;
+  text-decoration-color: #d70;
+}
+
+#header-asset {
+  text-decoration: underline;
+  text-decoration-color: #a00;
+}
+
 .full-screen {
   position: absolute;
   min-height: 100%;
@@ -28,18 +38,4 @@ body {
   position: relative;
   top: 100vh;
   min-height: 100vh;
-}
-
-/* .full-screen {
-  height: 100vh;
-} */
-
-#header-btc {
-  text-decoration: underline;
-  text-decoration-color: #d70;
-}
-
-#header-asset {
-  text-decoration: underline;
-  text-decoration-color: #a00;
 }

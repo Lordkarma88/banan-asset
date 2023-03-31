@@ -30,5 +30,5 @@ class TradeForm(FlaskForm):
     to_fiats = SelectField('Destination')
     to_cryptos = SelectField('Destination')
     to_comms = SelectField('Destination')
-    amount = IntegerField('Amount', validators=[InputRequired()])
+    amount = IntegerField('Amount sold', validators=[InputRequired()])
     date = DateField('Date', validators=[InputRequired()])

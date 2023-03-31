@@ -188,7 +188,7 @@ def get_comm_data():
     db.session.commit()
 
 
-def convert(date, from_sym, amount, to_sym) -> tuple:
+def get_prices(from_sym, to_sym, amount, date) -> tuple:
     '''Returns amount converted to to_sym and btc equivalent at date'''
     if 'com' in from_sym and 'com' in to_sym:
         (btc_price,) = get_crypto_rates([], date)
@@ -209,21 +209,25 @@ def convert(date, from_sym, amount, to_sym) -> tuple:
             [from_sym, to_sym], date)
 
     # If error getting commodity rate, returns -1 so they would be negative
-    if fsym_rate < 0 or tsym_rate < 0:
-        return False
+    # CCompare also returns 0 if no data
+    if fsym_rate <= 0 or tsym_rate <= 0:
+        return (False, 'curr_no_data', 0)
 
     '''| btc | fsym | tsym |
        |  1  | fs_r | ts_r |
        |  ?  | amnt |  ?   |'''
-    btc_equiv = amount / fsym_rate
-    tsym_equiv = btc_equiv * tsym_rate
+    try:
+        btc_equiv = amount / fsym_rate
+        tsym_equiv = btc_equiv * tsym_rate
+    except TypeError:
+        return (False, 'curr_not_avail', 0)
 
     return (tsym_equiv, btc_equiv, btc_price)
 
 
 def get_crypto_rates(syms_list, date) -> tuple:
     '''Sends request to CCompare API and returns rates
-    and btc price at date.\n
+    and btc price at date `yyyy-mm-dd`.\n
     Works with fiats too.
     If syms_list empty, returns btc price only.'''
     resp = requests.get(f'{CC_BASE_URL}/pricehistorical', params={
@@ -233,7 +237,7 @@ def get_crypto_rates(syms_list, date) -> tuple:
         'ts': mktime(parse_datetime(date).timetuple())})
     rates = resp.json()['BTC']
 
-    return (*(rates[sym] for sym in syms_list), rates['USD'])
+    return (*(rates.get(sym, 0) for sym in syms_list), rates['USD'])
 
 
 def get_comm_rate(sym, date) -> float:
@@ -249,3 +253,8 @@ def get_comm_rate(sym, date) -> float:
         return rate
     except:
         return -1
+
+
+def format_price(price, decimals=2):
+    '''Returns formatted price with commas and selected decimals (default 2)'''
+    return f'{float(price):,.{decimals}f}'

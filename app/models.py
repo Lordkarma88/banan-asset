@@ -188,5 +188,5 @@ class Trade(db.Model):
 
     def get_historical_trades(self):
         '''Returns to_amount and btc_equiv_then from added trade'''
-        from api_calls import convert
-        (self.to_amount, self.btc_equiv_then) = convert()
+        from helpers import get_prices
+        (self.to_amount, self.btc_equiv_then) = get_prices()
