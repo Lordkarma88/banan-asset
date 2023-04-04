@@ -1,11 +1,23 @@
-// BOOTSTRAP TOOLTIP ACTIVATION
+// BOOTSTRAP TOOLS ACTIVATION
 const tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
 const tooltipList = [...tooltipTriggerList].map(
   (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
 );
 
+const toastElList = $(".toast");
+const toastList = [...toastElList].map(
+  (toastEl) => new bootstrap.Toast(toastEl)
+);
+
+// Move result down if window too short (not responsive but
+// mostly will be used in mobile apps (can't be resized)
+const fullscreenHeight = $(".full-screen").height();
+if (fullscreenHeight > window.outerHeight) {
+  $("#result").offset({ top: fullscreenHeight });
+}
+
 /** Set num of decimals in relation to size of price except
- * if small price or numDecimals already selected*/
+ * if small price or numDecimals already selected (default 8)*/
 function formatPrice(price, numDecimals = 8) {
   if (price >= 10 && numDecimals == 8) {
     // Count number of digits before decimal point
@@ -22,13 +34,6 @@ function formatPrice(price, numDecimals = 8) {
   });
 
   return formatter.format(price).slice(1);
-}
-
-// Move result down if window too short (not responsive but
-// mostly should be used in mobile apps(can't be resized)
-const fullscreenHeight = $(".full-screen").height();
-if (fullscreenHeight > window.outerHeight) {
-  $("#result").offset({ top: fullscreenHeight - window.outerHeight });
 }
 
 const $fsymRadios = $("input[name=fsym-radio]");
@@ -64,11 +69,6 @@ function changeSelects(dir, evt) {
 async function handleForm(e) {
   e.preventDefault();
 
-  // Hide error message if visible
-  if ($("#error-msg").hasClass("text-light")) {
-    $("#error-msg").toggleClass("text-warning text-light bg-warning bg-dark");
-  }
-
   // Bootstrap validation
   if (!$form[0].checkValidity()) {
     $form.addClass("was-validated");
@@ -103,7 +103,7 @@ async function handleForm(e) {
 
   // If error was returned from ajax, show error message and stop
   if (resp.data.error) {
-    $("#error-msg").toggleClass("text-warning text-light bg-warning bg-dark");
+    toastList[0].show();
     return;
   }
 

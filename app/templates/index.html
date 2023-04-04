@@ -112,13 +112,15 @@
           </button>
         </div>
 
-        <!-- "hidden" div that gets shown by changing text and bg colors in JS -->
-        <div class="text-center mt-2 bg-warning text-warning rounded p-1" id="error-msg">
-          <b >That trade pair is unavailable at the selected date.</b>
-        </div>
       </form>
     </div>
-
+    
+    <!-- Notification-ish box that shows when activated by JS -->
+    <div class="toast align-items-center bg-light position-fixed bottom-0 end-0 me-2 mb-2">
+      <div class="d-flex">
+        <span class="toast-body">That trade pair is unavailable at the selected date.</span>
+      </div>
+    </div>
   </div>
 
   <div id="result" class="d-none">
@@ -135,7 +137,9 @@
         <h2 class="col-md-6">₿<span id="btc-result"></span></h2>
         <h4 class="mt-4">Back then, 1 bitcoin was only $<span id="btc-price"></span>.</h4>
         <p>Did you know you don't have to buy a full bitcoin?</p>
-        <p>You can get started with $20, $5 or even $1!</p>
+        <p>You can 
+          <a href="" class="text-warning">get started</a>
+           with $20, $5 or even $1!</p>
       </div>
     </div>
   </div>
