@@ -18,7 +18,7 @@ body {
   text-decoration-color: #a00;
 }
 
-.full-screen {
+#first-screen {
   position: absolute;
   min-height: 100%;
   min-width: 100%;
@@ -26,16 +26,26 @@ body {
   flex-direction: column;
 }
 
-.full-screen > header {
+#title-question {
   flex-grow: 1.2;
 }
 
-.full-screen > #trade-form {
+#trade-form {
   flex-grow: 2;
 }
 
-#result {
+#second-screen {
   position: relative;
   top: 100vh;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#result {
+  flex-grow: 1;
+}
+
+#signup-links {
+  flex-grow: 1;
 }

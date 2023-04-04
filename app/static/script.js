@@ -11,9 +11,9 @@ const toastList = [...toastElList].map(
 
 // Move result down if window too short (not responsive but
 // mostly will be used in mobile apps (can't be resized)
-const fullscreenHeight = $(".full-screen").height();
-if (fullscreenHeight > window.outerHeight) {
-  $("#result").offset({ top: fullscreenHeight });
+const firstScreenHeight = $(".first-screen").height();
+if (firstScreenHeight > window.outerHeight) {
+  $("#second-screen").offset({ top: firstScreenHeight });
 }
 
 /** Set num of decimals in relation to size of price except
@@ -122,5 +122,5 @@ async function handleForm(e) {
   $("#btc-price").text(formatPrice(btcPrice, 2));
 
   // Show result section and scroll to it
-  $("#result").removeClass("d-none")[0].scrollIntoView();
+  $("#second-screen").removeClass("d-none")[0].scrollIntoView();
 }

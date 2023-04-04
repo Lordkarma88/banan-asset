@@ -12,9 +12,10 @@
 </head>
 
 <body>
-  <div class="badge rounded-pill bg-warning mt-2 me-2" id="current-price">Current price: ${{ current_price }}</div>
-  <div class="full-screen bg-warning">
-    <header class="bg-black d-flex align-items-center py-md-3">
+  <div id="first-screen" class="bg-warning">
+    a.btn
+    <div class="badge rounded-pill bg-warning mt-2 me-2" id="current-price">Current price: ${{ current_price }}</div>
+    <header id="title-question" class="bg-black d-flex align-items-center py-md-3">
       <div class="container">
         <div class="row pt-4">
           <div class="col-8 col-md-6 ms-md-5 text-end" id="title">
@@ -123,23 +124,48 @@
     </div>
   </div>
 
-  <div id="result" class="d-none">
-    <div class="container p-5">
-      <h3>If you had bought</h3>
-      <h3 class="text-center">Bitcoin instead of</h3>
-      <h3 class="text-end">
-        <span id="to-sym"></span>
-        , you'd have...
-      </h3>
+  <div id="second-screen" class="d-non">
+    <div id="result" class="d-flex align-items-center">
+      <div class="container p-md-5">
+        
+        <h3>If you had bought</h3>
+        <h3 class="text-center">Bitcoin instead of</h3>
+        <h3 class="text-end">
+          <span id="to-sym"></span>
+          , you'd have...
+        </h3>
+        
+        <div class="row text-center mt-5">
+          <h2 class="col-md-6">$<span id="usd-result"></span></h2>
+          <h2 class="col-md-6">₿<span id="btc-result"></span></h2>
+          <h4 class="mt-4">Back then, 1 bitcoin was only $<span id="btc-price"></span>.</h4>
+        </div>
+      </div>
+    </div>
+    
+    <div id="signup-links" class="text-center">
+      <p>Did you know you don't have to buy a full bitcoin?</p>
+      <p>You can 
+        <a href="#" class="text-warning" data-bs-toggle="modal" data-bs-target="#buy-links-modal">get started</a>
+        with $20, $5 or even $1!</span>
+      </p>
+    </div>
+  </div>
 
-      <div class="row text-center mt-5">
-        <h2 class="col-md-6">$<span id="usd-result"></span></h2>
-        <h2 class="col-md-6">₿<span id="btc-result"></span></h2>
-        <h4 class="mt-4">Back then, 1 bitcoin was only $<span id="btc-price"></span>.</h4>
-        <p>Did you know you don't have to buy a full bitcoin?</p>
-        <p>You can 
-          <a href="" class="text-warning">get started</a>
-           with $20, $5 or even $1!</p>
+  <!-- Modal that redirects to btc sellers  -->
+  <div class="modal fade" id="buy-links-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h1 class="modal-title fs-5">Want to buy bitcoin?</h1>
+          <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-warning" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
