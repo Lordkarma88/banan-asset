@@ -2,9 +2,26 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
+@media (max-width: 575px) {
+  #top-buttons .btn {
+  --bs-btn-padding-y: 0.1rem;
+  --bs-btn-padding-x: 0.2rem;
+  --bs-btn-font-size: .75rem;
+  }
+
+  #current-price {
+  font-size: .7rem;
+  }
+}
+
+@media (min-width: 576px) {
+  #current-price {
+  font-size: .9rem;
+  }
+}
+
 #current-price {
   position: absolute;
-  z-index: 1;
   right: 0;
 }
 
