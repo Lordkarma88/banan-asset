@@ -14,8 +14,12 @@
 <body>
   <div id="first-screen" class="bg-black">
     <div id="top-buttons" class="d-flex align-items-center ms-2 mt-2">
-      <a href="/signup" class="btn btn-sm btn-outline-warning rounded-pill">Sign up</a>
-      <a href="/login" class="btn btn-sm btn-outline-warning rounded-pill mx-1">Login</a>
+      {% if current_user.is_authenticated %}
+        <a href="/logout" class="btn btn-sm btn-outline-warning rounded-pill me-1">Logout</a>
+      {% else %}
+        <a href="/signup" class="btn btn-sm btn-outline-warning rounded-pill">Sign up</a>
+        <a href="/login" class="btn btn-sm btn-outline-warning rounded-pill mx-1">Login</a>
+      {% endif %}
       <a href="#" class="btn btn-sm btn-outline-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#buy-links-modal">Buy bitcoin</a>
       <div class="badge rounded-pill bg-warning me-2" id="current-price">Current price: ${{ current_price }}</div>
     </div>
@@ -42,7 +46,6 @@
         <div class="row gx-2">
           <div class="col">
             <fieldset class="d-grid d-md-block gap-2 mb-2">
-              <!-- <span class="lead text-white">From: </span> -->
 
               <input type="radio" id="f-fiat-radio" name="fsym-radio" class="btn-check" data-target-collapse='f-fiat-collapse' data-target-select="#from_fiats" autocomplete="off" checked>
               <label for="f-fiat-radio" class="btn btn-warning">Fiats</label>
@@ -72,7 +75,6 @@
 
           <div class="col">
             <fieldset class="d-grid d-md-block gap-2 mb-2">
-              <!-- <span class="lead text-white">To: </span> -->
 
               <input type="radio" id="t-fiat-radio" name="tsym-radio" class="btn-check" data-target-collapse='t-fiat-collapse' data-target-select="#to_fiats" autocomplete="off">
               <label for="t-fiat-radio" class="btn btn-warning">Fiats</label>
@@ -144,14 +146,19 @@
           <h2 class="col-md-6">₿<span id="btc-result"></span></h2>
           <h4 class="mt-4">Back then, 1 bitcoin was only $<span id="btc-price"></span>.</h4>
         </div>
+        {% if current_user.is_authenticated %}
+        <button class="btn btn-outline-warning d-block m-3 mx-auto">Add to my trades</button>
+        {% endif %}
       </div>
     </div>
     
     <div id="signup-links" class="text-center">
+      {% if current_user.is_anonymous %}
       <p>Want more? 
         <a href="/signup" class="text-warning">Sign up</a>
-         to add multiple trades, track changes, and see your overall performance!
-        </p>
+        to add multiple trades, track changes, and see your overall performance!
+      </p>
+      {% endif %}
 
       <p class="mb-0">Did you know you don't have to buy a full bitcoin?</p>
       <p>You can 

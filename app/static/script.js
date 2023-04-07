@@ -9,12 +9,13 @@ const toastList = [...toastElList].map(
   (toastEl) => new bootstrap.Toast(toastEl)
 );
 
-// Move result down if window too short (not responsive but
-// mostly will be used in mobile apps (can't be resized)
-const firstScreenHeight = $(".first-screen").height();
-if (firstScreenHeight > window.outerHeight) {
-  $("#second-screen").offset({ top: firstScreenHeight });
+/** Moves results screen down if window too short, otherwise gets
+ * set to window height (#first-screen height is 100vh) */
+function repositionScreen2() {
+  $("#second-screen").offset({ top: $("#first-screen").height() });
 }
+$(window).on("resize", repositionScreen2);
+repositionScreen2();
 
 /** Set num of decimals in relation to size of price except
  * if small price or numDecimals already selected (default 8)*/
