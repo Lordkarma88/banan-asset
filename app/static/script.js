@@ -81,11 +81,11 @@ async function handleForm(e) {
   $("#submit-spinner").removeClass("d-none");
 
   // Find which type of currencies were chosen
-  for (button of $fsymRadios) if (button.checked) break;
-  for (button of $tsymRadios) if (button.checked) break;
+  for (fromButton of $fsymRadios) if (fromButton.checked) break;
+  for (toButton of $tsymRadios) if (toButton.checked) break;
   // From those, get the corresponding select
-  const fromSelect = $($(button).data("target-select"));
-  const toSelect = $($(button).data("target-select"));
+  const fromSelect = $($(fromButton).data("target-select"));
+  const toSelect = $($(toButton).data("target-select"));
 
   // Get values from form
   const from_sym = fromSelect.val();
@@ -116,8 +116,13 @@ async function handleForm(e) {
     $("#current-price").text().slice(16).replace(/,+/g, "")
   );
 
+  // Get commodity name if needed
+  if (to_sym.indexOf("com_" === 0)) {
+    const commName = $(`#${toSelect[0].id} option:selected`).text();
+    $("#to-sym").text(commName);
+  } else $("#to-sym").text(to_sym);
+
   // Add data to result section
-  $("#to-sym").text(to_sym);
   $("#usd-result").text(formatPrice(btcEquiv * currentBtcPrice));
   $("#btc-result").text(formatPrice(btcEquiv));
   $("#btc-price").text(formatPrice(btcPrice, 2));
