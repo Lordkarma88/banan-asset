@@ -179,8 +179,8 @@ def login():
 def logout():
     '''Log out user if logged in'''
     if current_user.is_anonymous:
-        flash('not logged in', 'danger')
-        return redirect(url_for('home'))
+        flash("You aren't logged in!", 'danger')
+        return redirect(url_for('login'))
 
     logout_user()
     flash('logged out', 'warning')

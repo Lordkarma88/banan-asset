@@ -21,7 +21,7 @@
         <a href="/login" class="btn btn-sm btn-outline-warning rounded-pill mx-1">Login</a>
       {% endif %}
       <a href="#" class="btn btn-sm btn-outline-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#buy-links-modal">Buy bitcoin</a>
-      <div class="badge rounded-pill bg-warning me-2" id="current-price">Current price: ${{ current_price }}</div>
+      {% include 'current_price.html'   %}
     </div>
     <header id="title-question" class="d-flex align-items-center py-md-3">
       <div class="container">
