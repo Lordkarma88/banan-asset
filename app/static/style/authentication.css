@@ -5,3 +5,7 @@ form {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+.form-floating {
+  min-height: 5rem;
+}

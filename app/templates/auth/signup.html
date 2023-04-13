@@ -15,23 +15,31 @@
   {{ form.hidden_tag() }}
 
   <div class="row">
-    <div class="col-6 form-floating mb-4">
-      {{ form.name(class_='form-control bg-light text-white', placeholder_='abc') }}
+    <div class="col-6 form-floating">
+      {{ form.name(class_='form-control bg-light text-white is-'+validity['name'], placeholder_='abc') }}
       {{ form.name.label }}
+
+      {% if form.name.errors %}
+        <span class="invalid-feedback">{{ form.name.errors[0] }}<span>
+      {% endif %}
     </div>
 
     <div class="col-6 form-floating">
       {{ form.username(class_='form-control bg-light text-white is-'+validity['username'], placeholder_='abc') }}
       {{ form.username.label }}
 
-      <span class="invalid-feedback">
-        {% if form.username.errors %}{{ form.username.errors[0] }}{% endif %}
-      <span>
+      {% if form.username.errors %}
+        <span class="invalid-feedback">{{ form.username.errors[0] }}<span>
+      {% endif %}
     </div>
 
-    <div class="form-floating mb-4">
-      {{ form.password(class_='form-control bg-light text-white', placeholder_='abc') }}
+    <div class="form-floating">
+      {{ form.password(class_='form-control bg-light text-white is-'+validity['password'], placeholder_='abc') }}
       {{ form.password.label }}
+
+      {% if form.password.errors %}
+        <span class="invalid-feedback">{{ form.password.errors[0] }}<span>
+      {% endif %}
     </div>
 
     <div class="form-floating">
@@ -39,10 +47,7 @@
       {{ form.pass_verify.label }}
       
       {% if form.pass_verify.errors %}
-      <span class="invalid-feedback">
-        {{ form.pass_verify.errors[0] }}</span>
-      {% else %}
-      <span class="opacity-0">abc</span>
+        <span class="invalid-feedback">{{ form.pass_verify.errors[0] }}</span>
       {% endif %}
     </div>
   </div>
