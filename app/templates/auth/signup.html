@@ -1,24 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign up to bbanan-asset{% endblock %}
+{% block title %}Sign up to banan-asset{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="/static/style/authentication.css">
+{% endblock %}
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" class="container col-sm-8 col-md-6 col-lg-4 col-xxl-3">
+
+  <legend class="mb-3">Welcome to Banan-asset! Sign up here, if you dare.</legend>
 
   {{ form.hidden_tag() }}
 
-  {% for field in form
-         if field.widget.input_type != 'hidden' %}
-  <p>
-    {{ field.label }}
-    {{ field(class_='form-control') }}
+  <div class="row">
+    <div class="col-6 form-floating mb-4">
+      {{ form.name(class_='form-control bg-light text-white', placeholder_='abc') }}
+      {{ form.name.label }}
+    </div>
 
-    {% for error in field.errors %}
-    <span class="text-danger">{{ error }}</span>
-    {% endfor %}
-  </p>
-  {% endfor %}
+    <div class="col-6 form-floating">
+      {{ form.username(class_='form-control bg-light text-white is-'+validity['username'], placeholder_='abc') }}
+      {{ form.username.label }}
+
+      <span class="invalid-feedback">
+        {% if form.username.errors %}{{ form.username.errors[0] }}{% endif %}
+      <span>
+    </div>
+
+    <div class="form-floating mb-4">
+      {{ form.password(class_='form-control bg-light text-white', placeholder_='abc') }}
+      {{ form.password.label }}
+    </div>
+
+    <div class="form-floating">
+      {{ form.pass_verify(class_='form-control bg-light text-white is-'+validity['pass_verify'], placeholder_='abc') }}
+      {{ form.pass_verify.label }}
+      
+      {% if form.pass_verify.errors %}
+      <span class="invalid-feedback">
+        {{ form.pass_verify.errors[0] }}</span>
+      {% else %}
+      <span class="opacity-0">abc</span>
+      {% endif %}
+    </div>
+  </div>
 
   <button class="btn btn-primary" type="submit">Submit</button>
 

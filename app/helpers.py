@@ -225,6 +225,12 @@ def get_prices(from_sym, to_sym, amount, date) -> tuple:
     return (tsym_equiv, btc_equiv, btc_price)
 
 
+def get_btc_price(date) -> float:
+    '''Gets current btc price from CCompare API at date'''
+    (current_price,) = get_crypto_rates([], date)
+    return current_price
+
+
 def get_crypto_rates(syms_list, date) -> tuple:
     '''Sends request to CCompare API and returns rates
     and btc price at date `yyyy-mm-dd`.\n

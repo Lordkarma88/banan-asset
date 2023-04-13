@@ -7,7 +7,7 @@ from datetime import date
 
 from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
 from forms import SignupForm, LoginForm, TradeForm
-from helpers import update_crypto_data, get_crypto_rates, get_prices, format_price
+from helpers import update_crypto_data, get_btc_price, get_prices, format_price
 from secret_keys import flask_secret_key
 
 GET = 'GET'
@@ -36,6 +36,19 @@ login_manager.init_app(app)
 update_crypto_data()
 
 
+@app.errorhandler(404)
+def not_found(e):
+    '''Show error page'''
+    return render_template('404.html')
+
+
+@app.template_global()
+def formatted_btc_price(at_date=None):
+    if not at_date:
+        at_date = date.today().strftime('%Y-%m-%d')
+    return format_price(get_btc_price(at_date))
+
+
 @app.route('/')
 def home():
     form = TradeForm()
@@ -45,12 +58,8 @@ def home():
     form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
 
     today = date.today().strftime('%Y-%m-%d')
-    (current_price,) = get_crypto_rates([], today)
 
-    return render_template('index.html',
-                           form=form,
-                           current_price=format_price(current_price),
-                           today=today)
+    return render_template('index.html', form=form, today=today)
 
 
 def get_choices():
@@ -125,7 +134,13 @@ def sign_up():
             flash('signed up', 'success')
             return redirect(url_for('home'))
 
-    return render_template('/auth/signup.html', form=form)
+    validity = {}
+    for field in form:
+        validity[field.id] = ''
+        if field.errors:
+            validity[field.id] = 'invalid'
+
+    return render_template('/auth/signup.html', form=form, validity=validity)
 
 
 def register_user(form):
