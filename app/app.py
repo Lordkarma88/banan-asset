@@ -187,7 +187,14 @@ def login():
             return redirect(url_for('home'))
 
         form.username.errors = ['Invalid username or password.']
-    return render_template('auth/login.html', form=form)
+
+    validity = {}
+    for field in form:
+        validity[field.id] = ''
+        if field.errors:
+            validity[field.id] = 'invalid'
+
+    return render_template('auth/login.html', form=form, validity=validity)
 
 
 @app.route('/logout')

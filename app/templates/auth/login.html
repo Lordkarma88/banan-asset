@@ -14,17 +14,23 @@
 
   {{ form.hidden_tag() }}
 
-  {% for field in form
-         if field.widget.input_type != 'hidden' %}
-  <p>
-    {{ field.label }}
-    {{ field(class_='form-control') }}
+  <div class="form-floating">
+    {{ form.username(class_='form-control bg-light text-white is-'+validity['username'], placeholder_='abc') }}
+    {{ form.username.label }}
 
-    {% for error in field.errors %}
-    <span class="text-danger">{{ error }}</span>
-    {% endfor %}
-  </p>
-  {% endfor %}
+    {% if form.username.errors %}
+      <span class="invalid-feedback">{{ form.username.errors[0] }}<span>
+    {% endif %}
+  </div>
+
+  <div class="form-floating">
+    {{ form.password(class_='form-control bg-light text-white is-'+validity['password'], placeholder_='abc') }}
+    {{ form.password.label }}
+
+    {% if form.password.errors %}
+      <span class="invalid-feedback">{{ form.password.errors[0] }}<span>
+    {% endif %}
+  </div>
 
   <button class="btn btn-primary" type="submit">Submit</button>
 
