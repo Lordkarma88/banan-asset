@@ -10,17 +10,17 @@ class SignupForm(FlaskForm):
     username = StringField('Username', validators=[
         InputRequired(message='Please enter a username.'),
         Length(max=20, message='Too long (max 20 characters).')])
-    password = PasswordField('Password', validators=[
-        InputRequired(message='Please enter a password.')])
-    pass_verify = PasswordField('Re-enter password', validators=[
-        InputRequired(message='Please re-enter your password.')])
+    passphrase = PasswordField('Passphrase', validators=[
+        InputRequired(message='Please enter a passphrase.')])
+    pass_verify = PasswordField('Re-enter passphrase', validators=[
+        InputRequired(message='Please re-enter your passphrase.')])
 
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[
         InputRequired(message='Please enter your username.')])
-    password = PasswordField('Password', validators=[
-        InputRequired(message='Please enter your password.')])
+    passphrase = PasswordField('Passphrase', validators=[
+        InputRequired(message='Please enter your passphrase.')])
 
 
 class TradeForm(FlaskForm):

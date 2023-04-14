@@ -50,7 +50,7 @@ class User(db.Model, UserMixin):
 
     @classmethod
     def login(cls, username, pwd):
-        '''Returns user if valid username and password, else false'''
+        '''Returns user if valid username and passphrase, else false'''
         u = cls.query.filter_by(username=username).first()
         if u and bcrypt.check_password_hash(u.pass_hash, pwd):
             return u

@@ -24,11 +24,11 @@
   </div>
 
   <div class="form-floating">
-    {{ form.password(class_='form-control bg-light text-white is-'+validity['password'], placeholder_='abc') }}
-    {{ form.password.label }}
+    {{ form.passphrase(class_='form-control bg-light text-white is-'+validity['passphrase'], placeholder_='abc') }}
+    {{ form.passphrase.label }}
 
-    {% if form.password.errors %}
-      <span class="invalid-feedback">{{ form.password.errors[0] }}<span>
+    {% if form.passphrase.errors %}
+      <span class="invalid-feedback">{{ form.passphrase.errors[0] }}<span>
     {% endif %}
   </div>
 

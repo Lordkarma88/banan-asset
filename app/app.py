@@ -145,18 +145,18 @@ def sign_up():
 
 def register_user(form):
     '''Accepts validated form and adds user to DB.\n
-    Returns False if passwords don't match
+    Returns False if passphrases don't match
     or if username taken (IntegrityError).'''
     name = form.name.data
     username = form.username.data
-    password = form.password.data
+    passphrase = form.passphrase.data
     pass_verify = form.pass_verify.data
 
-    if password != pass_verify:
-        form.pass_verify.errors = ["Passwords don't match."]
+    if passphrase != pass_verify:
+        form.pass_verify.errors = ["Passphrases don't match."]
         return False
 
-    u = User.signup(name, username, password)
+    u = User.signup(name, username, passphrase)
     db.session.add(u)
     try:
         db.session.commit()
@@ -178,15 +178,15 @@ def login():
 
     if form.validate_on_submit():
         username = form.username.data
-        password = form.password.data
-        u = User.login(username, password)
+        passphrase = form.passphrase.data
+        u = User.login(username, passphrase)
 
         if u:
             login_user(u)
             flash('logged in', 'success')
             return redirect(url_for('home'))
 
-        form.username.errors = ['Invalid username or password.']
+        form.username.errors = ['Invalid username or passphrase.']
 
     validity = {}
     for field in form:
