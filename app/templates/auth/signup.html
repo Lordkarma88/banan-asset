@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign up to banan-asset{% endblock %}
+{% block title %}Sign up to banan-asset if you dare{% endblock %}
 
 {% block stylesheet %}
   <link rel="stylesheet" href="/static/style/authentication.css">
@@ -10,7 +10,7 @@
 
 <form method="POST" class="container col-sm-8 col-md-6 col-lg-4 col-xxl-3">
 
-  <legend class="mb-3">Welcome to Banan-asset! Sign up here, if you dare.</legend>
+  <legend class="mb-3 text-center">Oh? You're signing up? Instead of running away, you're coming right to Bitcoin?</legend>
 
   {{ form.hidden_tag() }}
 
@@ -52,7 +52,9 @@
     </div>
   </div>
 
-  <button class="btn btn-primary" type="submit">Submit</button>
+  <div class="d-grid">
+    <button class="btn btn-primary" type="submit">Sign up</button>
+  </div>
 
 </form>
 

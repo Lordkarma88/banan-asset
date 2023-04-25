@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Banan-asset{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <h1>Hola</h1>
+
+  <div class="row">
+    <div class="col-7">
+      {% if trades %}
+        {% for trade in trades %}
+          tablerow
+        {% endfor %}
+      {% else %}
+        No trades yet!
+      {% endif %}
+    </div>
+
+    <div class="col-5">
+      <button class="btn btn-outline-warning">Add a trade</button>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -16,7 +16,7 @@ BASE_URL = 'http://127.0.0.1:5000'
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///bbanan-asset'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///banan-asset'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = flask_secret_key
 
@@ -51,6 +51,7 @@ def formatted_btc_price(at_date=None):
 
 @app.route('/')
 def home():
+    '''Show landing page with form for trying app out'''
     form = TradeForm()
 
     choices = get_choices()
@@ -83,6 +84,21 @@ def get_choices():
     # comm_choices.insert(0, ('', 'Select a commodity...'))
     return (fiat_choices, crypto_choices, comm_choices)
 
+
+@app.route('/mytrades')
+def my_trades():
+    '''Show logged in landing page'''
+    if current_user.is_anonymous:
+        return redirect(url_for('login'))
+
+    trades = current_user.trades
+
+    return render_template('user/mytrades.html', trades=trades)
+
+
+########################
+#     API METHODS      #
+########################
 
 @app.route('/convert', methods=[POST])
 def convert():
@@ -121,8 +137,7 @@ def load_user(user_id):
 def sign_up():
     '''Show signup form and add user to DB when submitted'''
     if current_user.is_authenticated:
-        flash('already logged in', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_trades'))
 
     form = SignupForm()
 
@@ -132,7 +147,7 @@ def sign_up():
         if u:
             login_user(u)
             flash('signed up', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('my_trades'))
 
     validity = {}
     for field in form:
@@ -140,7 +155,7 @@ def sign_up():
         if field.errors:
             validity[field.id] = 'invalid'
 
-    return render_template('/auth/signup.html', form=form, validity=validity)
+    return render_template('auth/signup.html', form=form, validity=validity)
 
 
 def register_user(form):
@@ -171,8 +186,7 @@ def register_user(form):
 def login():
     '''Login user or show login form'''
     if current_user.is_authenticated:
-        flash('already logged in', 'danger')
-        return redirect(url_for('home'))
+        return redirect(url_for('my_trades'))
 
     form = LoginForm()
 
@@ -183,8 +197,8 @@ def login():
 
         if u:
             login_user(u)
-            flash('logged in', 'success')
-            return redirect(url_for('home'))
+            flash('welcome back', 'success')
+            return redirect(url_for('my_trades'))
 
         form.username.errors = ['Invalid username or passphrase.']
 
@@ -201,9 +215,7 @@ def login():
 def logout():
     '''Log out user if logged in'''
     if current_user.is_anonymous:
-        flash("You aren't logged in!", 'danger')
         return redirect(url_for('login'))
 
     logout_user()
-    flash('logged out', 'warning')
     return redirect(url_for('home'))
