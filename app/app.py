@@ -3,22 +3,25 @@ from flask import flash, url_for, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+from os import environ
 from datetime import date
 
 from models import db, connect_db, User, Fiat_curr, Crypto_curr, Commodity
 from forms import SignupForm, LoginForm, TradeForm
 from helpers import update_crypto_data, get_btc_price, get_prices, format_price
-from secret_keys import flask_secret_key
+# from secret_keys import flask_secret_key
 
 GET = 'GET'
 POST = 'POST'
 BASE_URL = 'http://127.0.0.1:5000'
 
 app = Flask(__name__)
+load_dotenv()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///banan-asset'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = flask_secret_key
+app.config['SECRET_KEY'] = environ.get('FLASK_SECRET_KEY')
 
 
 # def init_app():

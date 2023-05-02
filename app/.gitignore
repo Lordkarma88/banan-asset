@@ -1,4 +1,4 @@
 __pycache__/
 venv/
 secret_keys.py
-nasdaq_key.txt
+.env

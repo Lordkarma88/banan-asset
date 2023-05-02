@@ -1,13 +1,17 @@
 import requests
 from ciso8601 import parse_datetime
 from time import mktime
+from os import environ
 
-from secret_keys import flask_secret_key, Nasdaq_key, CCompare_key
+# from secret_keys import flask_secret_key, Nasdaq_key, CCompare_key
 from models import Fiat_curr, Crypto_curr, Commodity, db
 
 CC_BASE_URL = 'https://min-api.cryptocompare.com/data'
 # CC_ASSET_INFO = 'https://data-api.cryptocompare.com/asset/v1/data/by/symbol'
 NQ_BASE_URL = 'https://data.nasdaq.com/api/v3/datasets/'
+
+Nasdaq_key = environ.get('NASDAQ_KEY')
+CCompare_key = environ.get('CCOMPARE_KEY')
 
 
 def create_fiat_currs():
