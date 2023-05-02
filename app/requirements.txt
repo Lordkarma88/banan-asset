@@ -5,6 +5,7 @@ flask-bcrypt==1.0.1
 flask-login==0.6.2
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==1.1.1
+gunicorn==20.1.0
 itsdangerous==1.1.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
