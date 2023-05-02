@@ -14,15 +14,15 @@ from helpers import update_crypto_data, get_btc_price, get_prices, format_price
 
 GET = 'GET'
 POST = 'POST'
-BASE_URL = 'http://127.0.0.1:5000'
 
 app = Flask(__name__)
 load_dotenv()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///banan-asset'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = environ.get('FLASK_SECRET_KEY')
 
+BASE_URL = environ.get('BASE_URL')
 
 # def init_app():
 #     connect_db(app)
