@@ -23,7 +23,7 @@
         <a href="/login" class="btn btn-sm btn-outline-warning rounded-pill mx-1">Login</a>
       {% endif %}
       <a href="#" class="btn btn-sm btn-outline-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#buy-links-modal">Buy bitcoin</a>
-      {% include 'current_price.html'   %}
+      {% include 'incl_blocks/current_price.html'   %}
     </div>
     <header id="title-question" class="d-flex align-items-center py-md-3">
       <div class="container">
@@ -41,98 +41,12 @@
       </div>
     </header>
 
-
     <div id="trade-form" class="d-flex align-items-center py-md-4 bg-warning">
-      <form class="container-lg needs-validation text-center px-3 pb-2" novalidate>
-        <legend>Select the origin and destination of a trade</legend>
-        <div class="row gx-2">
-          <div class="col">
-            <fieldset class="d-grid d-md-block gap-2 mb-2">
-
-              <input type="radio" id="f-fiat-radio" name="fsym-radio" class="btn-check" data-target-collapse='f-fiat-collapse' data-target-select="#from_fiats" autocomplete="off" checked>
-              <label for="f-fiat-radio" class="btn btn-warning">Fiats</label>
-
-              <input type="radio" id="f-crypto-radio" name="fsym-radio" class="btn-check"  data-target-collapse='f-crypto-collapse' data-target-select="#from_cryptos"autocomplete="off">
-              <label for="f-crypto-radio" class="btn btn-warning">Cryptos</label>
-
-              <input type="radio" id="f-comm-radio" name="fsym-radio" class="btn-check" data-target-collapse='f-comm-collapse' data-target-select="#from_comms" autocomplete="off">
-              <label for="f-comm-radio" class="btn btn-warning">Commodities</label>
-            </fieldset>
-            
-            <fieldset> <!-- These get toggled by js when radio buttons ^^^ are clicked -->
-              <div class="fsym-collapse collapse show form-floating" id="f-fiat-collapse">
-                {{ form.from_fiats(class_='form-select') }}
-                {{ form.from_fiats.label(class_='text-black') }}
-              </div>
-              <div class="fsym-collapse collapse form-floating" id="f-crypto-collapse">
-                {{ form.from_cryptos(class_='form-select') }}
-                {{ form.from_cryptos.label(class_='text-black') }}
-              </div>
-              <div class="fsym-collapse collapse form-floating" id="f-comm-collapse">
-                {{ form.from_comms(class_='form-select') }}
-                {{ form.from_comms.label(class_='text-black') }}
-              </div>
-            </fieldset>
-          </div>
-
-          <div class="col">
-            <fieldset class="d-grid d-md-block gap-2 mb-2">
-
-              <input type="radio" id="t-fiat-radio" name="tsym-radio" class="btn-check" data-target-collapse='t-fiat-collapse' data-target-select="#to_fiats" autocomplete="off">
-              <label for="t-fiat-radio" class="btn btn-warning">Fiats</label>
-
-              <input type="radio" id="t-crypto-radio" name="tsym-radio" class="btn-check" data-target-collapse='t-crypto-collapse' data-target-select="#to_cryptos" autocomplete="off" checked>
-              <label for="t-crypto-radio" class="btn btn-warning">Cryptos</label>
-
-              <input type="radio" id="t-comm-radio" name="tsym-radio" class="btn-check" data-target-collapse='t-comm-collapse' data-target-select="#to_comms" autocomplete="off">
-              <label for="t-comm-radio" class="btn btn-warning">Commodities</label>
-            </fieldset>
-
-            <fieldset class="my-2">
-              <div class="tsym-collapse collapse form-floating" id="t-fiat-collapse">
-                {{ form.to_fiats(class_='form-select') }}
-                {{ form.to_fiats.label(class_='text-black') }}
-              </div>
-              <div class="tsym-collapse collapse show form-floating" id="t-crypto-collapse">
-                {{ form.to_cryptos(class_='form-select') }}
-                {{ form.to_cryptos.label(class_='text-black') }}
-              </div>
-              <div class="tsym-collapse collapse form-floating" id="t-comm-collapse">
-                {{ form.to_comms(class_='form-select') }}
-                {{ form.to_comms.label(class_='text-black') }}
-              </div>
-            </fieldset>
-          </div>
-        </div>
-
-        <div class="row gx-0 gy-2">
-          <div class="col-md-5 form-floating">
-            {{ form.amount(class_='form-control', placeholder_='42', min_='0.000001', step_='.00000001') }}
-            {{ form.amount.label(class_='text-black ms-2') }}
-          </div>
-          <div class="col-md-5 px-md-2 form-floating">
-            {{ form.date(class_='form-control', max_=today, min_='2011-01-01') }}
-            {{ form.date.label(class_='text-black') }}
-          </div>
-          
-          <button class="col-md-2 btn btn-warning border-white" type="submit">
-            <span class="spinner-border spinner-border-sm d-none" id="submit-spinner"></span>  
-            Submit
-          </button>
-        </div>
-
-      </form>
-    </div>
-    
-    <!-- Notification-ish box that shows when activated by JS -->
-    <div class="toast align-items-center bg-light position-fixed bottom-0 end-0 me-2 mb-2">
-      <div class="d-flex">
-        <span class="toast-body">That trade pair is unavailable at the selected date.</span>
-      </div>
+      {% include 'incl_blocks/trade_form.html' %}
     </div>
   </div>
 
-  <div id="second-screen" class="d-non">
+  <div id="second-screen" class="d-none">
     <div id="result" class="d-flex align-items-center">
       <div class="container p-md-5">
         
@@ -189,8 +103,10 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.js"></script>
-<script src="https://unpkg.com/jquery"></script>
-<script src="/static/script/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.js"></script>
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="/static/script/global.js"></script>
+  <script src="/static/script/trade_form.js"></script>
+  <script src="/static/script/index.js"></script>
 </body>
 </html>

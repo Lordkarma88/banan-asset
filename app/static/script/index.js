@@ -1,14 +1,3 @@
-// BOOTSTRAP TOOLS ACTIVATION
-const tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
-const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-);
-
-const toastElList = $(".toast");
-const toastList = [...toastElList].map(
-  (toastEl) => new bootstrap.Toast(toastEl)
-);
-
 /** Moves results screen down if window too short, otherwise gets
  * set to window height (#first-screen height is 100vh) */
 function repositionScreen2() {
@@ -17,55 +6,7 @@ function repositionScreen2() {
 $(window).on("resize", repositionScreen2);
 repositionScreen2();
 
-/** Set num of decimals in relation to size of price except
- * if small price or numDecimals already selected (default 8)*/
-function formatPrice(price, numDecimals = 8) {
-  if (price >= 10 && numDecimals == 8) {
-    // Count number of digits before decimal point
-    const numDigits = Math.floor(Math.log10(price) + 1);
-    numDecimals = numDigits < 8 ? 9 - numDigits : 2;
-  }
-
-  // Create number formatter.
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: numDecimals,
-    maximumFractionDigits: numDecimals,
-  });
-
-  return formatter.format(price).slice(1);
-}
-
-const $fsymRadios = $("input[name=fsym-radio]");
-const $tsymRadios = $("input[name=tsym-radio]");
-const $form = $("form");
-
-$fsymRadios.on("change", changeSelects.bind(null, "fsym-"));
-$tsymRadios.on("change", changeSelects.bind(null, "tsym-"));
 $form.on("submit", handleForm);
-
-function changeSelects(dir, evt) {
-  // Get radio that was clicked
-  radio = $(evt.target);
-  // Disable all radios of that direction
-  radio.parent().attr("disabled", true);
-  setTimeout(() => {
-    // re-enable once animation over
-    radio.parent().attr("disabled", false);
-  }, 350);
-
-  // Get collapse to show from data tag
-  targetId = radio.data("target-collapse");
-
-  const collapses = [...$(`.${dir}collapse`)].map(
-    (el) => new bootstrap.Collapse(el, { toggle: false })
-  );
-  for (collapse of collapses) {
-    if (collapse._element.id === targetId) collapse.show();
-    else collapse.hide();
-  }
-}
 
 async function handleForm(e) {
   e.preventDefault();

@@ -16,6 +16,9 @@ GET = 'GET'
 POST = 'POST'
 
 app = Flask(__name__)
+# for secret keys and env vars that change depending on env
+# .env is ignored by git and has all secret keys
+# other env (railway) has its own env vars
 load_dotenv()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
@@ -57,35 +60,45 @@ def home():
     '''Show landing page with form for trying app out'''
     form = TradeForm()
 
-    choices = get_choices()
-    form.from_fiats.choices, form.from_cryptos.choices, form.from_comms.choices = choices
-    form.to_fiats.choices, form.to_cryptos.choices, form.to_comms.choices = choices
-
+    add_choices(form)
     today = date.today().strftime('%Y-%m-%d')
 
     return render_template('index.html', form=form, today=today)
 
 
-def get_choices():
-    '''Return list of tuples to be passed to WTForms SelectField choices'''
-    fiat_tuples = db.session.query(
-        Fiat_curr.symbol, Fiat_curr.country).order_by(
-        Fiat_curr.symbol).all()
-    fiat_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in fiat_tuples]
+def add_choices(form, user=False):
+    '''Makes list of tuples of assets and add the choices to the form
+        If user=True, only add the user's selected assets'''
+
+    fiat_query = db.session.query(
+        Fiat_curr.symbol, Fiat_curr.country).order_by(Fiat_curr.symbol)
+    crypto_query = db.session.query(
+        Crypto_curr.symbol, Crypto_curr.name).order_by(Crypto_curr.symbol)
+    comm_query = db.session.query(
+        Commodity.symbol, Commodity.name).order_by(Commodity.name)
+
+    if user:  # Only select user's assets if not the home page
+        fiat_query = fiat_query.filter(
+            Fiat_curr.users.contains(current_user))
+        crypto_query = crypto_query.filter(
+            Crypto_curr.users.contains(current_user))
+        comm_query = comm_query.filter(
+            Commodity.users.contains(current_user))
+
+    fiat_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in fiat_query.all()]
+    crypto_choices = [(ch[0], f'{ch[0]} ({ch[1]})')
+                      for ch in crypto_query.all()]
+    comm_choices = [tuple(ch) for ch in comm_query.all()]
+
     # fiat_choices.insert(0, ('', 'Select a fiat currency...'))
-
-    crypto_tuples = db.session.query(
-        Crypto_curr.symbol, Crypto_curr.name).order_by(
-        Crypto_curr.symbol).all()
-    crypto_choices = [(ch[0], f'{ch[0]} ({ch[1]})') for ch in crypto_tuples]
     # crypto_choices.insert(0, ('', 'Select a cryptocurrency...'))
-
-    comm_tuples = db.session.query(
-        Commodity.symbol, Commodity.name).order_by(
-        Commodity.name).all()
-    comm_choices = [tuple(ch) for ch in comm_tuples]
     # comm_choices.insert(0, ('', 'Select a commodity...'))
-    return (fiat_choices, crypto_choices, comm_choices)
+
+    form.from_fiats.choices = form.to_fiats.choices = fiat_choices
+    form.from_cryptos.choices = form.to_cryptos.choices = crypto_choices
+    form.from_comms.choices = form.to_comms.choices = comm_choices
+
+    return
 
 
 @app.route('/mytrades')
@@ -96,7 +109,10 @@ def my_trades():
 
     trades = current_user.trades
 
-    return render_template('user/mytrades.html', trades=trades)
+    form = TradeForm()
+    add_choices(form, user=True)
+
+    return render_template('user/my_trades.html', trades=trades, form=form)
 
 
 ########################

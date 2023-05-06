@@ -1,3 +1,12 @@
 legend {
   float: none;
 }
+
+.accordion-button {
+  color: white;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #fd7e14;
+  color: white;
+}

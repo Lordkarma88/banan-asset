@@ -2,3 +2,4 @@ __pycache__/
 venv/
 secret_keys.py
 .env
+bck.sql

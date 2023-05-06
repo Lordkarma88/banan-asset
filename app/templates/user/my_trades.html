@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}My trades{% endblock %}
+
+{% block stylesheet %}
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style/my_trades.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <h1>Track your<span id="h1-inner"> <span id="h1-gains">gains</span> </span>here</h1>
+
+  <div class="accordion" id="accordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accor-trades-table">
+          Trades overview
+        </button>
+      </h2>
+      <div class="accordion-collapse collapse show" id="accor-trades-table" data-bs-parent="#accordion">
+        <div class="accordion-body">
+          {% if trades %}
+            {% for trade in trades %}
+              tablerow
+            {% endfor %}
+          {% else %}
+            No trades yet!
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accor-assets-select">
+          Select your assets
+        </button>
+      </h2>
+      <div class="accordion-collapse collapse show" id="accor-assets-select" data-bs-parent="#accordion">
+        <div class="accordion-body">
+          <select name="state" id="state" multiple>
+            <option value="AL">Alabama</option>
+            <option value="AK">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accor-add-trade">
+          Add a trade
+        </button>
+      </h2>
+      <div class="accordion-collapse collapse" id="accor-add-trade" data-bs-parent="#accordion">
+        <div class="accordion-body">
+          <div id="trade-form" class="d-flex align-items-center py-md-4 bg-warning rounded-5 rounded-bottom">
+            {% include 'incl_blocks/trade_form.html' %}
+          </div>
+          <p class="fs-5 bg-warning rounded my-3 px-2">
+            Don't see any assets? Add them here!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#trade-modal">Add a trade</button>
+  </div>
+
+  <!-- Modal to add a trade  -->
+  <div class="modal fade" id="trade-modal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h1 class="modal-title fs-5">Add a trade</h1>
+          <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body bg-black">
+          <div id="trade-form" class="d-flex align-items-center py-md-4 bg-warning rounded-5 rounded-bottom">
+            {% include 'incl_blocks/trade_form.html' %}
+          </div>
+          <p class="fs-5 bg-warning rounded my-3 px-2">
+            Don't see any assets? Add them here!
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-warning" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="/static/script/trade_form.js"></script>
+  <script src="/static/script/my_trades.js"></script>
+{% endblock %}
