@@ -6,8 +6,17 @@
   content: ' losses';
 }
 
+.d-flex .form-label {
+  margin: 0;
+  align-self: center;
+}
+
 .select2-container {
   width: 100%;
+}
+
+.select2-container.select2-container--default.select2-container--open:not(.select2-container--below){
+  width: 0; /* Prevents overflow that widens the page */
 }
 
 .select2-container--default .select2-selection--multiple {
@@ -40,4 +49,8 @@
 
 .select2-container--default .select2-results__option--selected {
   background-color: #7e3f0a;
+}
+
+.select2-selection__clear span {
+  color:#aaa
 }
